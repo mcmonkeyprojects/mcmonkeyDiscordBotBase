@@ -21,9 +21,9 @@ namespace DiscordBotBase
         public Action<string, List<string>, SocketMessage> UnknownCommandHandler = null;
 
         /// <summary>
-        /// A method that will return a bool indicating whether the client should respond to commands in the channel given in the parameter.
+        /// A method that will return a bool indicating whether the client should respond to commands in the message given in the parameter (usually based on the channel details).
         /// </summary>
-        public Func<ISocketMessageChannel, bool> ShouldPayAttentionToChannel = null;
+        public Func<SocketMessage, bool> ShouldPayAttentionToMessage = null;
 
         /// <summary>
         /// A method to run to initialize the bot.

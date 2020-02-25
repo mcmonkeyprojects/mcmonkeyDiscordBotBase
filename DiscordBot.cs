@@ -248,7 +248,7 @@ namespace DiscordBotBase
                 {
                     return Task.CompletedTask;
                 }
-                if (!ClientConfig.ShouldPayAttentionToChannel(message.Channel))
+                if (!ClientConfig.ShouldPayAttentionToMessage(message))
                 {
                     Console.WriteLine($"Refused message from ({message.Author.Username}): (Non-whitelisted Channel: {message.Channel.Name}): {message.Content}");
                     return Task.CompletedTask;
