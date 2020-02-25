@@ -194,7 +194,6 @@ namespace DiscordBotBase
                     return Task.CompletedTask;
                 }
                 BotMonitor.ConnectedCurrently = true;
-                Client.SetGameAsync("Type !help").Wait();
                 if (BotMonitor.ConnectedOnce)
                 {
                     return Task.CompletedTask;
