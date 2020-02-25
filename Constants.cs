@@ -11,10 +11,6 @@ namespace DiscordBotBase
     public static class Constants
     {
         /// <summary>
-        /// The prefix for non-ping-based command usage.
-        /// </summary>
-        public static string COMMAND_PREFIX = "!";
-        /// <summary>
         /// A warning emoji image URL.
         /// </summary>
         public const string WARNING_ICON = "https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/26a0.png";

@@ -66,9 +66,9 @@ namespace DiscordBotBase
         public void Respond(SocketMessage message, bool outputUnknowns, string altContent = null)
         {
             string messageText = altContent ?? message.Content;
-            if (messageText.StartsWith(Constants.COMMAND_PREFIX))
+            if (ClientConfig.CommandPrefix != null && messageText.StartsWith(ClientConfig.CommandPrefix))
             {
-                messageText = messageText.Substring(Constants.COMMAND_PREFIX.Length);
+                messageText = messageText.Substring(ClientConfig.CommandPrefix.Length);
             }
             string[] messageDataSplit = messageText.Split(' ');
             StringBuilder resultBuilder = new StringBuilder(messageText.Length);
@@ -255,7 +255,7 @@ namespace DiscordBotBase
                 }
                 bool mentionedMe = message.MentionedUsers.Any((su) => su.Id == Client.CurrentUser.Id);
                 Console.WriteLine($"Parsing message from ({message.Author.Username}), in channel: {message.Channel.Name}: {message.Content}");
-                if (mentionedMe || message.Content.StartsWith(Constants.COMMAND_PREFIX))
+                if (mentionedMe || (ClientConfig.CommandPrefix != null && message.Content.StartsWith(ClientConfig.CommandPrefix)))
                 {
                     try
                     {

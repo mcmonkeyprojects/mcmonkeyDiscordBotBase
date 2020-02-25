@@ -29,5 +29,10 @@ namespace DiscordBotBase
         /// A method to run to initialize the bot.
         /// </summary>
         public Action<DiscordBot> Initialize = null;
+
+        /// <summary>
+        /// The command prefix to use, if any. (If null, requires a direct ping).
+        /// </summary>
+        public string CommandPrefix = "!";
     }
 }
