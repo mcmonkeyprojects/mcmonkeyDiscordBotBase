@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DiscordBotBase</RootNamespace>
+    <AssemblyName>mcmonkeyDiscordBotBase</AssemblyName>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <LangVersion>Latest</LangVersion>
+    <Product>mcmonkeyDiscordBotBase</Product>
+    <PackageId>mcmonkeyDiscordBotBase</PackageId>
+    <Copyright>Copyright (C) Alex "mcmonkey" Goodwin 2020</Copyright>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="**\*.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Discord.Net" Version="2.1.1" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="2.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="FreneticUtilities\*.*" />
+    <Compile Remove="FreneticUtilities\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj" />
+  </ItemGroup>
+</Project>
