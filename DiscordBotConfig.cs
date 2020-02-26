@@ -31,6 +31,11 @@ namespace DiscordBotBase
         public Action<DiscordBot> Initialize = null;
 
         /// <summary>
+        /// Extra message handling, after command handling is done.
+        /// </summary>
+        public Action<IUserMessage> OtherMessageHandling = null;
+
+        /// <summary>
         /// The command prefix to use, if any. (If null, requires a direct ping).
         /// </summary>
         public string CommandPrefix = "!";

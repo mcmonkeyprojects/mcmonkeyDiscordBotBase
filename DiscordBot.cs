@@ -273,6 +273,7 @@ namespace DiscordBotBase
                         Console.WriteLine($"Error handling command: {ex.ToString()}");
                     }
                 }
+                ClientConfig.OtherMessageHandling?.Invoke(message);
                 return Task.CompletedTask;
             };
             Console.WriteLine("Logging in to Discord...");
