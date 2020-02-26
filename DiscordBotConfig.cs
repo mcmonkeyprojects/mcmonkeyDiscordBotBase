@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Discord.WebSocket;
+using Discord;
 
 namespace DiscordBotBase
 {
@@ -18,12 +18,12 @@ namespace DiscordBotBase
         /// <summary>
         /// An alternate handler for unknown commands (eg special info output) (if any).
         /// </summary>
-        public Action<string, List<string>, SocketMessage> UnknownCommandHandler = null;
+        public Action<string, List<string>, IUserMessage> UnknownCommandHandler = null;
 
         /// <summary>
         /// A method that will return a bool indicating whether the client should respond to commands in the message given in the parameter (usually based on the channel details).
         /// </summary>
-        public Func<SocketMessage, bool> ShouldPayAttentionToMessage = null;
+        public Func<IUserMessage, bool> ShouldPayAttentionToMessage = null;
 
         /// <summary>
         /// A method to run to initialize the bot.

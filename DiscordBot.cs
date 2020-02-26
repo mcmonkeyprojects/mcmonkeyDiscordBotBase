@@ -63,7 +63,7 @@ namespace DiscordBotBase
         /// <param name="message">The message received.</param>
         /// <param name="outputUnknowns">Whether to output "unknown command" messages.</param>
         /// <param name="altContent">Alternate message content, if the message is being autosent.</param>
-        public void Respond(SocketMessage message, bool outputUnknowns, string altContent = null)
+        public void Respond(IUserMessage message, bool outputUnknowns, string altContent = null)
         {
             string messageText = altContent ?? message.Content;
             if (ClientConfig.CommandPrefix != null && messageText.StartsWith(ClientConfig.CommandPrefix))
@@ -94,7 +94,7 @@ namespace DiscordBotBase
             Console.WriteLine("Found input from: (" + message.Author.Username + "), in channel: " + message.Channel.Name + ": " + fullMessageCleaned);
             string commandNameLowered = cmds[0].ToLowerInvariant();
             cmds.RemoveAt(0);
-            if (ChatCommands.TryGetValue(commandNameLowered, out Action<string[], SocketMessage> acto))
+            if (ChatCommands.TryGetValue(commandNameLowered, out Action<string[], IUserMessage> acto))
             {
                 acto.Invoke(cmds.ToArray(), message);
             }
@@ -111,7 +111,7 @@ namespace DiscordBotBase
         /// <summary>
         /// All valid user commands in a map of typable command name -> command method.
         /// </summary>
-        public readonly Dictionary<string, Action<string[], SocketMessage>> ChatCommands = new Dictionary<string, Action<string[], SocketMessage>>(1024);
+        public readonly Dictionary<string, Action<string[], IUserMessage>> ChatCommands = new Dictionary<string, Action<string[], IUserMessage>>(1024);
         
         /// <summary>
         /// Saves the config file.
@@ -132,7 +132,7 @@ namespace DiscordBotBase
         /// <summary>
         /// Registers a command to a name and any number of aliases.
         /// </summary>
-        public void RegisterCommand(Action<string[], SocketMessage> command, params string[] names)
+        public void RegisterCommand(Action<string[], IUserMessage> command, params string[] names)
         {
             foreach (string name in names)
             {
@@ -231,8 +231,12 @@ namespace DiscordBotBase
                 ReactionsHandler.TestReaction(message.Id, reaction);
                 return Task.CompletedTask;
             };
-            Client.MessageReceived += (message) =>
+            Client.MessageReceived += (socketMessage) =>
             {
+                if (!(socketMessage is IUserMessage message))
+                {
+                    return Task.CompletedTask;
+                }
                 if (BotMonitor.ShouldStopAllLogic())
                 {
                     return Task.CompletedTask;
@@ -252,7 +256,7 @@ namespace DiscordBotBase
                     Console.WriteLine($"Refused message from ({message.Author.Username}): (Non-whitelisted Channel: {message.Channel.Name}): {message.Content}");
                     return Task.CompletedTask;
                 }
-                bool mentionedMe = message.MentionedUsers.Any((su) => su.Id == Client.CurrentUser.Id);
+                bool mentionedMe = socketMessage.MentionedUsers.Any((su) => su.Id == Client.CurrentUser.Id);
                 Console.WriteLine($"Parsing message from ({message.Author.Username}), in channel: {message.Channel.Name}: {message.Content}");
                 if (mentionedMe || (ClientConfig.CommandPrefix != null && message.Content.StartsWith(ClientConfig.CommandPrefix)))
                 {

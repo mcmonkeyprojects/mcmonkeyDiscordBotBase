@@ -28,7 +28,7 @@ namespace DiscordBotBase.Reactables
         /// <param name="originalMessage">The original message, from a user.</param>
         /// <param name="newMessage">The new message, from the bot.</param>
         /// <param name="command">The command to execute if affirmatively clicked.</param>
-        public static void AddReactable(SocketMessage originalMessage, RestUserMessage newMessage, string command)
+        public static void AddReactable(IUserMessage originalMessage, IUserMessage newMessage, string command)
         {
             Reactables[newMessage.Id] = new ReactableMessage() { Command = command, Message = newMessage, OriginalMessage = originalMessage, TimeCreated = DateTimeOffset.Now };
             Console.WriteLine($"New reactable message: {newMessage.Id} with command '{command}'.");

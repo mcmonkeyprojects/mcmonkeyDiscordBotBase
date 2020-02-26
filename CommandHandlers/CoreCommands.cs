@@ -17,7 +17,7 @@ namespace DiscordBotBase.CommandHandlers
         /// <summary>
         /// Constructs the core commands helper.
         /// </summary>
-        public CoreCommands(Func<SocketUser, bool> isUserAdmin)
+        public CoreCommands(Func<IUser, bool> isUserAdmin)
         {
             UserAdminCheckMethod = isUserAdmin;
         }
@@ -25,12 +25,12 @@ namespace DiscordBotBase.CommandHandlers
         /// <summary>
         /// Method to check if the user is an admin.
         /// </summary>
-        public Func<SocketUser, bool> UserAdminCheckMethod;
+        public Func<IUser, bool> UserAdminCheckMethod;
 
         /// <summary>
         /// Bot restart admin command.
         /// </summary>
-        public void CMD_Restart(string[] cmds, SocketMessage message)
+        public void CMD_Restart(string[] cmds, IUserMessage message)
         {
             if (!UserAdminCheckMethod(message.Author))
             {

@@ -42,7 +42,7 @@ namespace DiscordBotBase.CommandHandlers
         /// </summary>
         /// <param name="message">The message to reply to.</param>
         /// <param name="embed">The embed message to send.</param>
-        public static void SendReply(SocketMessage message, Embed embed)
+        public static void SendReply(IUserMessage message, Embed embed)
         {
             message.Channel.SendMessageAsync(embed: embed).Wait();
         }
@@ -54,9 +54,9 @@ namespace DiscordBotBase.CommandHandlers
         /// <param name="title">The message title.</param>
         /// <param name="description">The message description.</param>
         /// <param name="command">The bot command to imitate if the reaction is clicked.</param>
-        public static void SendDidYouMeanReply(SocketMessage message, string title, string description, string command)
+        public static void SendDidYouMeanReply(IUserMessage message, string title, string description, string command)
         {
-            RestUserMessage sentMessage = message.Channel.SendMessageAsync(embed: GetGenericPositiveMessageEmbed(title, description)).Result;
+            IUserMessage sentMessage = message.Channel.SendMessageAsync(embed: GetGenericPositiveMessageEmbed(title, description)).Result;
             if (sentMessage != null)
             {
                 sentMessage.AddReactionsAsync(new IEmote[] { new Emoji(Constants.ACCEPT_EMOJI), new Emoji(Constants.DENY_EMOJI) }).Wait();
@@ -67,7 +67,7 @@ namespace DiscordBotBase.CommandHandlers
         /// <summary>
         /// Sends a generic positive reply to a message in the same channel.
         /// </summary>
-        public static void SendGenericPositiveMessageReply(SocketMessage message, string title, string description)
+        public static void SendGenericPositiveMessageReply(IUserMessage message, string title, string description)
         {
             SendReply(message, GetGenericPositiveMessageEmbed(title, description));
         }
@@ -75,7 +75,7 @@ namespace DiscordBotBase.CommandHandlers
         /// <summary>
         /// Sends a generic negative reply to a message in the same channel.
         /// </summary>
-        public static void SendGenericNegativeMessageReply(SocketMessage message, string title, string description)
+        public static void SendGenericNegativeMessageReply(IUserMessage message, string title, string description)
         {
             SendReply(message, GetGenericNegativeMessageEmbed(title, description));
         }
@@ -83,7 +83,7 @@ namespace DiscordBotBase.CommandHandlers
         /// <summary>
         /// Sends an error message reply to a message in the same channel.
         /// </summary>
-        public static void SendErrorMessageReply(SocketMessage message, string title, string description)
+        public static void SendErrorMessageReply(IUserMessage message, string title, string description)
         {
             SendReply(message, GetErrorMessageEmbed(title, description));
         }

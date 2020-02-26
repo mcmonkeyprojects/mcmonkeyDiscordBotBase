@@ -15,12 +15,12 @@ namespace DiscordBotBase.Reactables
         /// <summary>
         /// The message that can be reacted to.
         /// </summary>
-        public RestUserMessage Message;
+        public IUserMessage Message;
 
         /// <summary>
         /// The original message that the reactable message was replying to.
         /// </summary>
-        public SocketMessage OriginalMessage;
+        public IUserMessage OriginalMessage;
 
         /// <summary>
         /// The command to imitate if accepted.
