@@ -201,9 +201,16 @@ namespace DiscordBotBase
                 Console.WriteLine($"Args: {args.Length}");
                 if (args.Length > 0 && ulong.TryParse(args[0], out ulong argument1))
                 {
-                    ISocketMessageChannel channelToNotify = Client.GetChannel(argument1) as ISocketMessageChannel;
-                    Console.WriteLine($"Restarted as per request in channel: {channelToNotify.Name}");
-                    channelToNotify.SendMessageAsync(embed: UserCommands.GetGenericPositiveMessageEmbed("Restarted", "Connected and ready!")).Wait();
+                    try
+                    {
+                        ISocketMessageChannel channelToNotify = Client.GetChannel(argument1) as ISocketMessageChannel;
+                        Console.WriteLine($"Restarted as per request in channel: {channelToNotify.Name}");
+                        channelToNotify.SendMessageAsync(embed: UserCommands.GetGenericPositiveMessageEmbed("Restarted", "Connected and ready!")).Wait();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error with sending restart message: {ex}");
+                    }
                 }
                 BotMonitor.ConnectedOnce = true;
                 return Task.CompletedTask;
