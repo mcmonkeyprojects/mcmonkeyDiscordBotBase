@@ -121,5 +121,13 @@ namespace DiscordBotBase.CommandHandlers
         {
             return text.Replace('`', '\'');
         }
+
+        /// <summary>
+        /// Generates a link to a Discord message.
+        /// </summary>
+        public static string LinkToMessage(IMessage message)
+        {
+            return "https://discordapp.com/channels/" + (message.Channel as SocketGuildChannel).Guild.Id + "/" + message.Channel.Id + "/" + message.Id;
+        }
     }
 }
