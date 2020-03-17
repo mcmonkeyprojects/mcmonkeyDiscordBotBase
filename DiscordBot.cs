@@ -177,7 +177,8 @@ namespace DiscordBotBase
             Console.WriteLine("Loading Discord...");
             DiscordSocketConfig config = new DiscordSocketConfig
             {
-                MessageCacheSize = 256
+                MessageCacheSize = 256,
+                AlwaysDownloadUsers = true
             };
             //config.LogLevel = LogSeverity.Debug;
             Client = new DiscordSocketClient(config);
