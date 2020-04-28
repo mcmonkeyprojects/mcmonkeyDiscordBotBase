@@ -119,7 +119,7 @@ namespace DiscordBotBase.CommandHandlers
         /// <returns>The escaped result.</returns>
         public static string EscapeUserInput(string text)
         {
-            return text.Replace('\\', '/').Replace('`', '\'');
+            return text.Replace('\\', '/').Replace('`', '\'').Replace("<@", "{@").Replace("://", ";//").Replace("discord.gg", "discord,gg");
         }
 
         /// <summary>
