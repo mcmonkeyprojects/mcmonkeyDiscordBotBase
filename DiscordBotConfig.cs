@@ -39,5 +39,15 @@ namespace DiscordBotBase
         /// The command prefix to use, if any. (If null, requires a direct ping).
         /// </summary>
         public string CommandPrefix = "!";
+
+        /// <summary>
+        /// How many messages per channel to cache by default.
+        /// </summary>
+        public int CacheSize = 256;
+
+        /// <summary>
+        /// Whether to automatically forcibly pre-fill the cache at startup.
+        /// </summary>
+        public bool EnsureCaching = false;
     }
 }

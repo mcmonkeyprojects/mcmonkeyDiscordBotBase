@@ -161,6 +161,35 @@ namespace DiscordBotBase
         public ConnectionMonitor BotMonitor;
 
         /// <summary>
+        /// Prefills cache data (if enable by <see cref="ClientConfig"/>).
+        /// </summary>
+        public void PrefillCache()
+        {
+            if (!ClientConfig.EnsureCaching)
+            {
+                return;
+            }
+            foreach (SocketGuild guild in Client.Guilds)
+            {
+                foreach (SocketTextChannel channel in guild.TextChannels)
+                {
+                    if (BotMonitor.ShouldStopAllLogic())
+                    {
+                        return;
+                    }
+                    try
+                    {
+                        channel.GetMessagesAsync(100).ForEach(col => { Task.Delay(100).Wait(); });
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error while prefilling cache: {ex}");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Initializes the bot object, connects, and runs the active loop.
         /// </summary>
         public void InitAndRun(string[] args)
@@ -177,7 +206,7 @@ namespace DiscordBotBase
             Console.WriteLine("Loading Discord...");
             DiscordSocketConfig config = new DiscordSocketConfig
             {
-                MessageCacheSize = 256,
+                MessageCacheSize = ClientConfig.CacheSize,
                 AlwaysDownloadUsers = true
             };
             //config.LogLevel = LogSeverity.Debug;
@@ -197,6 +226,7 @@ namespace DiscordBotBase
                 BotMonitor.ConnectedCurrently = true;
                 if (BotMonitor.ConnectedOnce)
                 {
+                    PrefillCache();
                     return Task.CompletedTask;
                 }
                 Console.WriteLine($"Args: {args.Length}");
@@ -214,6 +244,7 @@ namespace DiscordBotBase
                     }
                 }
                 BotMonitor.ConnectedOnce = true;
+                PrefillCache();
                 return Task.CompletedTask;
             };
             Client.ReactionAdded += (message, channel, reaction) =>
