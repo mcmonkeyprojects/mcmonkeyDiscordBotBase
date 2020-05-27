@@ -309,7 +309,7 @@ namespace DiscordBotBase
                         {
                             throw;
                         }
-                        Console.WriteLine($"Error handling command: {ex.ToString()}");
+                        Console.WriteLine($"Error handling command: {ex}");
                     }
                 }
                 ClientConfig.OtherMessageHandling?.Invoke(message);
