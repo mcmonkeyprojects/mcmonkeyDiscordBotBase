@@ -24,6 +24,6 @@
     <Compile Remove="FreneticUtilities\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj" />
+    <ProjectReference Include="$(SolutionDir)FreneticUtilities\FreneticUtilities\FreneticUtilities.csproj" />
   </ItemGroup>
 </Project>
