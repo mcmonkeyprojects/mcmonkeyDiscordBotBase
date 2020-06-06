@@ -9,8 +9,6 @@
     <Product>mcmonkeyDiscordBotBase</Product>
     <PackageId>mcmonkeyDiscordBotBase</PackageId>
     <Copyright>Copyright (C) Alex "mcmonkey" Goodwin 2020</Copyright>
-    <ApplicationIcon />
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="**\*.resx" />
