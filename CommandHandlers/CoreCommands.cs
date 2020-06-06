@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using Discord;
-using Discord.WebSocket;
 
 namespace DiscordBotBase.CommandHandlers
 {

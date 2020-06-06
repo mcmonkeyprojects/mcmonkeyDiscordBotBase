@@ -2,17 +2,9 @@
 using System.Text;
 using System.IO;
 using System.Linq;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Discord.Net;
 using Discord;
 using Discord.WebSocket;
-using Discord.Rest;
-using System.Diagnostics;
-using FreneticUtilities.FreneticExtensions;
-using FreneticUtilities.FreneticDataSyntax;
 using DiscordBotBase.Reactables;
 
 namespace DiscordBotBase.CommandHandlers
