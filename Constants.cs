@@ -26,6 +26,11 @@ namespace DiscordBotBase
         public const string SPEECH_BUBBLE_ICON = "https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f4ac.png";
 
         /// <summary>
+        /// Generic reusable "red flag" icon.
+        /// </summary>
+        public const string RED_FLAG_ICON = "https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f6a9.png";
+
+        /// <summary>
         /// A checkmark "accept"/"yes" emoji, for reactions.
         /// </summary>
         public const string ACCEPT_EMOJI = "☑️";
