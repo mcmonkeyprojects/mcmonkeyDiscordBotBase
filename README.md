@@ -7,7 +7,7 @@ This is a base/template codebase for my Discord bots. Generally not really meant
 
 The MIT License (MIT)
 
-Copyright (c) 2020 Alex "mcmonkey" Goodwin
+Copyright (c) 2020-2021 Alex "mcmonkey" Goodwin
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

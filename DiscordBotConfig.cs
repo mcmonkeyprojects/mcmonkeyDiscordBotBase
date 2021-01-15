@@ -42,6 +42,7 @@ namespace DiscordBotBase
 
         /// <summary>
         /// How many messages per channel to cache by default.
+        /// This value can be overriden by the "discord_cache_size" config.fds option.
         /// </summary>
         public int CacheSize = 256;
 

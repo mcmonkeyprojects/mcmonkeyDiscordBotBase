@@ -64,7 +64,7 @@ namespace DiscordBotBase
             string messageText = altContent ?? message.Content;
             if (ClientConfig.CommandPrefix != null && messageText.StartsWith(ClientConfig.CommandPrefix))
             {
-                messageText = messageText.Substring(ClientConfig.CommandPrefix.Length);
+                messageText = messageText[ClientConfig.CommandPrefix.Length..];
             }
             string[] messageDataSplit = messageText.Split(' ');
             StringBuilder resultBuilder = new StringBuilder(messageText.Length);
@@ -202,7 +202,7 @@ namespace DiscordBotBase
             Console.WriteLine("Loading Discord...");
             DiscordSocketConfig config = new DiscordSocketConfig
             {
-                MessageCacheSize = ClientConfig.CacheSize,
+                MessageCacheSize = ConfigFile.GetInt("discord_cache_size", ClientConfig.CacheSize).Value,
                 AlwaysDownloadUsers = true
             };
             //config.LogLevel = LogSeverity.Debug;
