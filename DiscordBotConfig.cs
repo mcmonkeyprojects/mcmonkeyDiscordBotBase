@@ -18,7 +18,7 @@ namespace DiscordBotBase
         /// <summary>
         /// An alternate handler for unknown commands (eg special info output) (if any).
         /// </summary>
-        public Action<string, List<string>, IUserMessage> UnknownCommandHandler = null;
+        public Action<string, CommandData> UnknownCommandHandler = null;
 
         /// <summary>
         /// A method that will return a bool indicating whether the client should respond to commands in the message given in the parameter (usually based on the channel details).

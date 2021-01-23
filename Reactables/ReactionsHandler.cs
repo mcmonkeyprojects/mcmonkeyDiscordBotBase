@@ -75,7 +75,7 @@ namespace DiscordBotBase.Reactables
             if (reaction.Emote.Name == Constants.ACCEPT_EMOJI)
             {
                 Console.WriteLine("Reaction is an accept. Running.");
-                DiscordBotBaseHelper.CurrentBot.Respond(message.OriginalMessage, true, altContent: message.Command);
+                DiscordBotBaseHelper.CurrentBot.Respond(message.OriginalMessage, true, false, altContent: message.Command);
             }
             else if (reaction.Emote.Name != Constants.DENY_EMOJI)
             {

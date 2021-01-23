@@ -29,21 +29,23 @@ namespace DiscordBotBase.CommandHandlers
         /// <summary>
         /// Bot restart admin command.
         /// </summary>
-        public void CMD_Restart(string[] cmds, IUserMessage message)
+        public void CMD_Restart(CommandData command)
         {
-            if (!UserAdminCheckMethod(message.Author))
+            if (!UserAdminCheckMethod(command.Message.Author))
             {
-                SendErrorMessageReply(message, "Authorization Failure", "Nope! That's not for you!");
+                SendErrorMessageReply(command.Message, "Authorization Failure", "Nope! That's not for you!");
                 return;
             }
             if (!File.Exists("./start.sh"))
             {
-                SendErrorMessageReply(message, "Cannot Comply", "Nope! That's not valid for my current configuration! (`start.sh` missing).");
+                SendErrorMessageReply(command.Message, "Cannot Comply", "Nope! That's not valid for my current configuration! (`start.sh` missing).");
             }
-            SendGenericPositiveMessageReply(message, "Restarting", "Yes, boss. Restarting now...");
-            Process.Start("bash", "./start.sh " + message.Channel.Id);
+            SendGenericPositiveMessageReply(command.Message, "Restarting", "Yes, boss. Restarting now...");
             Task.Factory.StartNew(() =>
             {
+                Task.Delay(1000).Wait();
+                Console.WriteLine("Initial restart trigger...");
+                Process.Start("bash", "./start.sh " + command.Message.Channel.Id);
                 Console.WriteLine("Shutdown start...");
                 for (int i = 0; i < 15; i++)
                 {

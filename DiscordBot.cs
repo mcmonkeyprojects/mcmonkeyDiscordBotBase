@@ -58,8 +58,9 @@ namespace DiscordBotBase
         /// </summary>
         /// <param name="message">The message received.</param>
         /// <param name="outputUnknowns">Whether to output "unknown command" messages.</param>
+        /// <param name="wasMentioned">Whether the bot was mentioned to trigger this command.</param>
         /// <param name="altContent">Alternate message content, if the message is being autosent.</param>
-        public void Respond(IUserMessage message, bool outputUnknowns, string altContent = null)
+        public void Respond(IUserMessage message, bool outputUnknowns, bool wasMentioned, string altContent = null)
         {
             string messageText = altContent ?? message.Content;
             if (ClientConfig.CommandPrefix != null && messageText.StartsWith(ClientConfig.CommandPrefix))
@@ -68,31 +69,38 @@ namespace DiscordBotBase
             }
             string[] messageDataSplit = messageText.Split(' ');
             StringBuilder resultBuilder = new StringBuilder(messageText.Length);
-            List<string> cmds = new List<string>();
-            for (int i = 0; i < messageDataSplit.Length; i++)
+            List<string> argsCleaned = new List<string>();
+            List<string> argsRaw = new List<string>();
+            foreach (string originalArg in messageDataSplit)
             {
-                if (messageDataSplit[i].Contains("<@") && messageDataSplit[i].Contains(">"))
+                if (originalArg.Contains("<@") && originalArg.Contains(">"))
                 {
+                    if (originalArg[2..^1].Replace("!", "") != Client.CurrentUser.Id.ToString())
+                    {
+                        argsRaw.Add(originalArg);
+                    }
                     continue;
                 }
-                resultBuilder.Append(messageDataSplit[i]).Append(" ");
-                if (messageDataSplit[i].Length > 0)
+                resultBuilder.Append(originalArg).Append(" ");
+                if (originalArg.Length > 0)
                 {
-                    cmds.Add(messageDataSplit[i]);
+                    argsCleaned.Add(originalArg);
+                    argsRaw.Add(originalArg);
                 }
             }
-            if (cmds.Count == 0)
+            if (argsCleaned.Count == 0)
             {
                 Console.WriteLine("Empty input, ignoring: " + message.Author.Username);
                 return;
             }
             string fullMessageCleaned = resultBuilder.ToString();
             Console.WriteLine("Found input from: (" + message.Author.Username + "), in channel: " + message.Channel.Name + ": " + fullMessageCleaned);
-            string commandNameLowered = cmds[0].ToLowerInvariant();
-            cmds.RemoveAt(0);
-            if (ChatCommands.TryGetValue(commandNameLowered, out Action<string[], IUserMessage> acto))
+            string commandNameLowered = argsCleaned[0].ToLowerInvariant();
+            argsCleaned.RemoveAt(0);
+            CommandData commandData = new CommandData() { Message = message, CleanedArguments = argsCleaned.ToArray(), RawArguments = argsRaw.ToArray(), WasBotMention = wasMentioned };
+            if (ChatCommands.TryGetValue(commandNameLowered, out Action<CommandData> commandHandlerMethod))
             {
-                acto.Invoke(cmds.ToArray(), message);
+                commandHandlerMethod.Invoke(commandData);
             }
             else if (outputUnknowns && ClientConfig.UnknownCommandMessage != null)
             {
@@ -100,14 +108,14 @@ namespace DiscordBotBase
             }
             else
             {
-                ClientConfig.UnknownCommandHandler?.Invoke(commandNameLowered, cmds, message);
+                ClientConfig.UnknownCommandHandler?.Invoke(commandNameLowered, commandData);
             }
         }
 
         /// <summary>
         /// All valid user commands in a map of typable command name -> command method.
         /// </summary>
-        public readonly Dictionary<string, Action<string[], IUserMessage>> ChatCommands = new Dictionary<string, Action<string[], IUserMessage>>(1024);
+        public readonly Dictionary<string, Action<CommandData>> ChatCommands = new Dictionary<string, Action<CommandData>>(1024);
         
         /// <summary>
         /// Saves the config file.
@@ -128,7 +136,7 @@ namespace DiscordBotBase
         /// <summary>
         /// Registers a command to a name and any number of aliases.
         /// </summary>
-        public void RegisterCommand(Action<string[], IUserMessage> command, params string[] names)
+        public void RegisterCommand(Action<CommandData> command, params string[] names)
         {
             foreach (string name in names)
             {
@@ -268,7 +276,7 @@ namespace DiscordBotBase
             };
             Client.MessageReceived += (socketMessage) =>
             {
-                if (!(socketMessage is IUserMessage message))
+                if (socketMessage is not IUserMessage message)
                 {
                     return Task.CompletedTask;
                 }
@@ -297,7 +305,7 @@ namespace DiscordBotBase
                 {
                     try
                     {
-                        Respond(message, mentionedMe);
+                        Respond(message, mentionedMe, mentionedMe);
                     }
                     catch (Exception ex)
                     {
