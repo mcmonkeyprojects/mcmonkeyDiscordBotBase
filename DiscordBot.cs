@@ -288,6 +288,10 @@ namespace DiscordBotBase
                 {
                     return Task.CompletedTask;
                 }
+                if (!ClientConfig.AllowDMs && message.Channel is not SocketGuildChannel)
+                {
+                    return Task.CompletedTask;
+                }
                 ReactionsHandler.CheckReactables();
                 BotMonitor.LoopsSilent = 0;
                 if (message.Author.IsBot || message.Author.IsWebhook)

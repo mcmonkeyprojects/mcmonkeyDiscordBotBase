@@ -50,5 +50,10 @@ namespace DiscordBotBase
         /// Whether to automatically forcibly pre-fill the cache at startup.
         /// </summary>
         public bool EnsureCaching = false;
+
+        /// <summary>
+        /// Whether to allow direct messages (if not, only guild messages are allowed).
+        /// </summary>
+        public bool AllowDMs = false;
     }
 }
