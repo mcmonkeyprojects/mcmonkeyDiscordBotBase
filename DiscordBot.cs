@@ -81,7 +81,7 @@ namespace DiscordBotBase
                     }
                     continue;
                 }
-                resultBuilder.Append(originalArg).Append(" ");
+                resultBuilder.Append(originalArg).Append(' ');
                 if (originalArg.Length > 0)
                 {
                     argsCleaned.Add(originalArg);
@@ -183,7 +183,7 @@ namespace DiscordBotBase
                     }
                     try
                     {
-                        channel.GetMessagesAsync(100).ForEach(col => { Task.Delay(100).Wait(); });
+                        channel.GetMessagesAsync(100).ForEachAwaitAsync(async col => await Task.Delay(100));
                     }
                     catch (Exception ex)
                     {
