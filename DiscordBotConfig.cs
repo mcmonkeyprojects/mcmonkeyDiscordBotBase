@@ -36,6 +36,11 @@ namespace DiscordBotBase
         public Action<IUserMessage> OtherMessageHandling = null;
 
         /// <summary>
+        /// Logic to run when the bot's about to shutdown.
+        /// </summary>
+        public Action OnShutdown = null;
+
+        /// <summary>
         /// The command prefix to use, if any. (If null, requires a direct ping).
         /// </summary>
         public string CommandPrefix = "!";

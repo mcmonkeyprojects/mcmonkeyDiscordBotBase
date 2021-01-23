@@ -150,6 +150,7 @@ namespace DiscordBotBase
         /// </summary>
         public void Shutdown()
         {
+            ClientConfig.OnShutdown?.Invoke();
             Client.StopAsync().Wait();
             Client.Dispose();
             StoppedEvent.Set();
