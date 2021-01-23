@@ -97,6 +97,7 @@ namespace DiscordBotBase
             Console.WriteLine("Found input from: (" + message.Author.Username + "), in channel: " + message.Channel.Name + ": " + fullMessageCleaned);
             string commandNameLowered = argsCleaned[0].ToLowerInvariant();
             argsCleaned.RemoveAt(0);
+            argsRaw.RemoveAt(0);
             CommandData commandData = new CommandData() { Message = message, CleanedArguments = argsCleaned.ToArray(), RawArguments = argsRaw.ToArray(), WasBotMention = wasMentioned };
             if (ChatCommands.TryGetValue(commandNameLowered, out Action<CommandData> commandHandlerMethod))
             {
