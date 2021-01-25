@@ -185,7 +185,8 @@ namespace DiscordBotBase
                     }
                     try
                     {
-                        channel.GetMessagesAsync(100).ForEachAwaitAsync(async col => await Task.Delay(100));
+                        channel.GetMessagesAsync(100).ForEachAwaitAsync(async col => await Task.Delay(100)).Wait();
+                        Task.Delay(100).Wait();
                     }
                     catch (Exception ex)
                     {
