@@ -190,7 +190,14 @@ namespace DiscordBotBase
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error while prefilling cache: {ex}");
+                        if (ex.Message.Contains("error 50001: Missing Acccess"))
+                        {
+                            Console.WriteLine($"Error while prefilling cache in guild {guild.Id} ({guild.Name}) in channel {channel.Id} ({channel.Name}): no message access.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Error while prefilling cache in guild {guild.Id} ({guild.Name}) in channel {channel.Id} ({channel.Name}): {ex}");
+                        }
                     }
                 }
             }

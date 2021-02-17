@@ -84,7 +84,7 @@ namespace DiscordBotBase
             {
                 Bot.Shutdown();
             });
-            DiscordBotBaseHelper.LaunchBotThread(new String[0],  Bot.ClientConfig);
+            DiscordBotBaseHelper.LaunchBotThread(Array.Empty<string>(),  Bot.ClientConfig);
         }
 
         /// <summary>

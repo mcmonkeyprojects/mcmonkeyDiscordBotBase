@@ -51,7 +51,7 @@ namespace DiscordBotBase
             {
                 Console.WriteLine("Discord crash: " + ex.ToString());
                 Thread.Sleep(10 * 1000);
-                LaunchBotThread(new string[0], CurrentBot.ClientConfig);
+                LaunchBotThread(Array.Empty<string>(), CurrentBot.ClientConfig);
             }
         }
     }
