@@ -10,6 +10,7 @@ using Discord.WebSocket;
 using FreneticUtilities.FreneticDataSyntax;
 using DiscordBotBase.CommandHandlers;
 using DiscordBotBase.Reactables;
+using FreneticUtilities.FreneticToolkit;
 
 namespace DiscordBotBase
 {
@@ -52,6 +53,11 @@ namespace DiscordBotBase
         /// The internal config for what this bot should be doing.
         /// </summary>
         public DiscordBotConfig ClientConfig;
+
+        /// <summary>
+        /// A cache of messages sent previously on Discord.
+        /// </summary>
+        public DiscordMessageCache Cache;
 
         /// <summary>
         /// Bot command response handler.
@@ -132,7 +138,7 @@ namespace DiscordBotBase
         /// <summary>
         /// Lock object for config file saving/loading.
         /// </summary>
-        public static Object ConfigSaveLock = new Object();
+        public static LockObject ConfigSaveLock = new LockObject();
 
         /// <summary>
         /// Registers a command to a name and any number of aliases.
@@ -167,43 +173,6 @@ namespace DiscordBotBase
         public ConnectionMonitor BotMonitor;
 
         /// <summary>
-        /// Prefills cache data (if enable by <see cref="ClientConfig"/>).
-        /// </summary>
-        public void PrefillCache()
-        {
-            if (!ClientConfig.EnsureCaching)
-            {
-                return;
-            }
-            foreach (SocketGuild guild in Client.Guilds)
-            {
-                foreach (SocketTextChannel channel in guild.TextChannels)
-                {
-                    if (BotMonitor.ShouldStopAllLogic())
-                    {
-                        return;
-                    }
-                    try
-                    {
-                        channel.GetMessagesAsync(100).ForEachAwaitAsync(async col => await Task.Delay(100)).Wait();
-                        Task.Delay(100).Wait();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (ex.Message.Contains("error 50001: Missing Acccess"))
-                        {
-                            Console.WriteLine($"Error while prefilling cache in guild {guild.Id} ({guild.Name}) in channel {channel.Id} ({channel.Name}): no message access.");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Error while prefilling cache in guild {guild.Id} ({guild.Name}) in channel {channel.Id} ({channel.Name}): {ex}");
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Initializes the bot object, connects, and runs the active loop.
         /// </summary>
         public void InitAndRun(string[] args)
@@ -217,10 +186,11 @@ namespace DiscordBotBase
                     ConfigFile = FDSUtility.ReadFile(CONFIG_FILE);
                 }
             }
+            Cache = new DiscordMessageCache(this, ConfigFile.GetInt("discord_cache_size", ClientConfig.CacheSize).Value);
             Console.WriteLine("Loading Discord...");
             DiscordSocketConfig config = new DiscordSocketConfig
             {
-                MessageCacheSize = ConfigFile.GetInt("discord_cache_size", ClientConfig.CacheSize).Value,
+                MessageCacheSize = 0,
                 AlwaysDownloadUsers = true
             };
             //config.LogLevel = LogSeverity.Debug;
@@ -240,7 +210,10 @@ namespace DiscordBotBase
                 BotMonitor.ConnectedCurrently = true;
                 if (BotMonitor.ConnectedOnce)
                 {
-                    PrefillCache();
+                    if (ClientConfig.EnsureCaching)
+                    {
+                        Cache.Prefill();
+                    }
                     return Task.CompletedTask;
                 }
                 Console.WriteLine($"Args: {args.Length}");
@@ -258,7 +231,10 @@ namespace DiscordBotBase
                     }
                 }
                 BotMonitor.ConnectedOnce = true;
-                PrefillCache();
+                if (ClientConfig.EnsureCaching)
+                {
+                    Cache.Prefill();
+                }
                 return Task.CompletedTask;
             };
             Client.ReactionAdded += (message, channel, reaction) =>
@@ -294,11 +270,12 @@ namespace DiscordBotBase
                 {
                     return Task.CompletedTask;
                 }
-                if (message.Author.Id == Client.CurrentUser.Id)
+                if (!ClientConfig.AllowDMs && message.Channel is not SocketGuildChannel)
                 {
                     return Task.CompletedTask;
                 }
-                if (!ClientConfig.AllowDMs && message.Channel is not SocketGuildChannel)
+                Cache.CacheMessage(socketMessage);
+                if (message.Author.Id == Client.CurrentUser.Id)
                 {
                     return Task.CompletedTask;
                 }
@@ -331,6 +308,23 @@ namespace DiscordBotBase
                     }
                 }
                 ClientConfig.OtherMessageHandling?.Invoke(message);
+                return Task.CompletedTask;
+            };
+            Client.MessageUpdated += (cache, socketMessage, channel) =>
+            {
+                if (socketMessage is not IUserMessage message)
+                {
+                    return Task.CompletedTask;
+                }
+                if (BotMonitor.ShouldStopAllLogic())
+                {
+                    return Task.CompletedTask;
+                }
+                if (!ClientConfig.AllowDMs && message.Channel is not SocketGuildChannel)
+                {
+                    return Task.CompletedTask;
+                }
+                Cache.CacheMessage(socketMessage);
                 return Task.CompletedTask;
             };
             Console.WriteLine("Logging in to Discord...");
