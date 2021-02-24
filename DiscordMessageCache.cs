@@ -173,7 +173,7 @@ namespace DiscordBotBase
                             cache.AddToCache(message);
                         }
                         Task.Delay(100).Wait();
-                        Console.WriteLine($"Completed cache prefill for channel {channel.Id} ({channel.Name})");
+                        Console.WriteLine($"Completed cache prefill for channel {channel.Id} ({channel.Name}) with {cache.Cache.Count} messages stored");
                     }
                     catch (Exception ex)
                     {
