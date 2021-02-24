@@ -167,7 +167,7 @@ namespace DiscordBotBase
                         {
                             messages.AddRange(col);
                             await Task.Delay(100);
-                        });
+                        }).Wait();
                         foreach (IMessage message in messages.OrderBy(m => m.Timestamp))
                         {
                             cache.AddToCache(message);
