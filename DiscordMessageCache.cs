@@ -173,6 +173,7 @@ namespace DiscordBotBase
                             cache.AddToCache(message);
                         }
                         Task.Delay(100).Wait();
+                        Console.WriteLine($"Completed cache prefill for channel {channel.Id} ({channel.Name})");
                     }
                     catch (Exception ex)
                     {
@@ -186,6 +187,7 @@ namespace DiscordBotBase
                         }
                     }
                 }
+                Console.WriteLine($"Completed cache prefill for guild {guild.Id} ({guild.Name})");
             }
         }
     }
