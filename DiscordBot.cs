@@ -203,13 +203,16 @@ namespace DiscordBotBase
             ClientConfig.Initialize(this);
             Client.Ready += () =>
             {
+                Console.WriteLine($"Bot declared ready...");
                 if (BotMonitor.ShouldStopAllLogic())
                 {
+                    Console.WriteLine($"But bot is already dead.");
                     return Task.CompletedTask;
                 }
                 BotMonitor.ConnectedCurrently = true;
                 if (BotMonitor.ConnectedOnce)
                 {
+                    Console.WriteLine($"But bot was connected before, so just refill the cache.");
                     if (ClientConfig.EnsureCaching)
                     {
                         Cache.Prefill();
@@ -231,6 +234,7 @@ namespace DiscordBotBase
                     }
                 }
                 BotMonitor.ConnectedOnce = true;
+                Console.WriteLine($"Filling cache...");
                 if (ClientConfig.EnsureCaching)
                 {
                     Cache.Prefill();
