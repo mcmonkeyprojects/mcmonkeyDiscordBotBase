@@ -152,7 +152,7 @@ namespace DiscordBotBase
             }
             if (!isConnected)
             {
-                Console.WriteLine("Monitor detected disconnected state!");
+                Console.WriteLine($"Monitor detected disconnected state! Based on ConnectedCurrently={ConnectedCurrently}, ConnectionState={Bot.Client.ConnectionState}, with {LoopsSilent}/{LoopsTotal} silent/total loops.");
             }
             if (LoopsSilent > 60)
             {
