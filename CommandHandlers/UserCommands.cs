@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Discord;
 using Discord.WebSocket;
 using DiscordBotBase.Reactables;
+using FreneticUtilities.FreneticToolkit;
 
 namespace DiscordBotBase.CommandHandlers
 {
@@ -105,6 +106,8 @@ namespace DiscordBotBase.CommandHandlers
             return new EmbedBuilder().WithTitle(title).WithColor(255, 64, 32).WithThumbnailUrl(Constants.WARNING_ICON).WithDescription(description).Build();
         }
 
+        public static AsciiMatcher NeedsEscapeMatcher = new AsciiMatcher("\\`<*_|:~");
+
         /// <summary>
         /// Escapes user input for output. Best when wrapped in `backticks`.
         /// </summary>
@@ -112,7 +115,12 @@ namespace DiscordBotBase.CommandHandlers
         /// <returns>The escaped result.</returns>
         public static string EscapeUserInput(string text)
         {
-            return text.Replace('\\', '/').Replace('`', '\'').Replace("<@", "{@").Replace("://", ";//").Replace("discord.gg", "discord,gg");
+            text = text.Replace("discord.gg", "discord\x00B7gg");
+            if (NeedsEscapeMatcher.ContainsAnyMatch(text))
+            {
+                text = text.Replace('\\', '/').Replace('`', '\'').Replace('<', '\x3008').Replace(':', '\xFF1A').Replace('*', '\x2731').Replace('_', '\xFF3F').Replace('|', '\xFF5C').Replace('~', '\x223C');
+            }
+            return text;
         }
 
         /// <summary>
