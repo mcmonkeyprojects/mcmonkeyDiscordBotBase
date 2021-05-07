@@ -69,53 +69,60 @@ namespace DiscordBotBase
         public void Respond(IUserMessage message, bool outputUnknowns, bool wasMentioned, string altContent = null)
         {
             string messageText = altContent ?? message.Content;
-            if (ClientConfig.CommandPrefix != null && messageText.StartsWith(ClientConfig.CommandPrefix))
+            try
             {
-                messageText = messageText[ClientConfig.CommandPrefix.Length..];
-            }
-            string[] messageDataSplit = messageText.Split(' ');
-            StringBuilder resultBuilder = new StringBuilder(messageText.Length);
-            List<string> argsCleaned = new List<string>();
-            List<string> argsRaw = new List<string>();
-            foreach (string originalArg in messageDataSplit)
-            {
-                if (originalArg.Contains("<@") && originalArg.Contains(">"))
+                if (ClientConfig.CommandPrefix != null && messageText.StartsWith(ClientConfig.CommandPrefix))
                 {
-                    if (originalArg[2..^1].Replace("!", "") != Client.CurrentUser.Id.ToString())
+                    messageText = messageText[ClientConfig.CommandPrefix.Length..];
+                }
+                string[] messageDataSplit = messageText.Split(' ');
+                StringBuilder resultBuilder = new StringBuilder(messageText.Length);
+                List<string> argsCleaned = new List<string>();
+                List<string> argsRaw = new List<string>();
+                foreach (string originalArg in messageDataSplit)
+                {
+                    if (originalArg.Contains("<@") && originalArg.Contains(">"))
                     {
+                        if (originalArg[2..^1].Replace("!", "") != Client.CurrentUser.Id.ToString())
+                        {
+                            argsRaw.Add(originalArg);
+                        }
+                        continue;
+                    }
+                    resultBuilder.Append(originalArg).Append(' ');
+                    if (originalArg.Length > 0)
+                    {
+                        argsCleaned.Add(originalArg);
                         argsRaw.Add(originalArg);
                     }
-                    continue;
                 }
-                resultBuilder.Append(originalArg).Append(' ');
-                if (originalArg.Length > 0)
+                if (argsCleaned.Count == 0)
                 {
-                    argsCleaned.Add(originalArg);
-                    argsRaw.Add(originalArg);
+                    Console.WriteLine("Empty input, ignoring: " + message.Author.Username);
+                    return;
+                }
+                string fullMessageCleaned = resultBuilder.ToString();
+                Console.WriteLine("Found input from: (" + message.Author.Username + "), in channel: " + message.Channel.Name + ": " + fullMessageCleaned);
+                string commandNameLowered = argsCleaned[0].ToLowerInvariant();
+                argsCleaned.RemoveAt(0);
+                argsRaw.RemoveAt(0);
+                CommandData commandData = new CommandData() { Message = message, CleanedArguments = argsCleaned.ToArray(), RawArguments = argsRaw.ToArray(), WasBotMention = wasMentioned };
+                if (ChatCommands.TryGetValue(commandNameLowered, out Action<CommandData> commandHandlerMethod))
+                {
+                    commandHandlerMethod.Invoke(commandData);
+                }
+                else if (outputUnknowns && ClientConfig.UnknownCommandMessage != null)
+                {
+                    message.Channel.SendMessageAsync(embed: UserCommands.GetErrorMessageEmbed("Unknown Command", ClientConfig.UnknownCommandMessage)).Wait();
+                }
+                else
+                {
+                    ClientConfig.UnknownCommandHandler?.Invoke(commandNameLowered, commandData);
                 }
             }
-            if (argsCleaned.Count == 0)
+            catch (Exception ex)
             {
-                Console.WriteLine("Empty input, ignoring: " + message.Author.Username);
-                return;
-            }
-            string fullMessageCleaned = resultBuilder.ToString();
-            Console.WriteLine("Found input from: (" + message.Author.Username + "), in channel: " + message.Channel.Name + ": " + fullMessageCleaned);
-            string commandNameLowered = argsCleaned[0].ToLowerInvariant();
-            argsCleaned.RemoveAt(0);
-            argsRaw.RemoveAt(0);
-            CommandData commandData = new CommandData() { Message = message, CleanedArguments = argsCleaned.ToArray(), RawArguments = argsRaw.ToArray(), WasBotMention = wasMentioned };
-            if (ChatCommands.TryGetValue(commandNameLowered, out Action<CommandData> commandHandlerMethod))
-            {
-                commandHandlerMethod.Invoke(commandData);
-            }
-            else if (outputUnknowns && ClientConfig.UnknownCommandMessage != null)
-            {
-                message.Channel.SendMessageAsync(embed: UserCommands.GetErrorMessageEmbed("Unknown Command", ClientConfig.UnknownCommandMessage)).Wait();
-            }
-            else
-            {
-                ClientConfig.UnknownCommandHandler?.Invoke(commandNameLowered, commandData);
+                Console.Error.WriteLine($"Error while handling command '{messageText}': {ex}");
             }
         }
 
