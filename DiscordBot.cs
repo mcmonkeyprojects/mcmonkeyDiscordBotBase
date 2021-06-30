@@ -301,7 +301,7 @@ namespace DiscordBotBase
                     Console.WriteLine($"Refused message from ({message.Author.Username}): (Non-whitelisted Channel: {message.Channel.Name}): {message.Content}");
                     return Task.CompletedTask;
                 }
-                bool mentionedMe = socketMessage.MentionedUsers.Any((su) => su.Id == Client.CurrentUser.Id);
+                bool mentionedMe = socketMessage.Content.Contains($"<@{Client.CurrentUser.Id}>") || socketMessage.Content.Contains($"<@!{Client.CurrentUser.Id}>");
                 Console.WriteLine($"Parsing message from ({message.Author.Username}), in channel: {message.Channel.Name}: {message.Content}");
                 if (mentionedMe || (ClientConfig.CommandPrefix != null && message.Content.StartsWith(ClientConfig.CommandPrefix)))
                 {
