@@ -37,7 +37,7 @@ namespace DiscordBotBase.CommandHandlers
         /// <param name="embed">The embed message to send.</param>
         public static IUserMessage SendReply(IUserMessage message, Embed embed)
         {
-            return message.Channel.SendMessageAsync(embed: embed).Result;
+            return message.ReplyAsync(embed: embed, allowedMentions: AllowedMentions.None).Result;
         }
 
         /// <summary>
