@@ -31,13 +31,26 @@ namespace DiscordBotBase.CommandHandlers
         public DiscordBot Bot;
 
         /// <summary>
+        /// Helper value to avoid sending a Discord reply to the same message twice in a row.
+        /// </summary>
+        public static ulong LastRepliedMessage;
+
+        /// <summary>
         /// Sends a reply to a message in the same channel.
         /// </summary>
         /// <param name="message">The message to reply to.</param>
         /// <param name="embed">The embed message to send.</param>
         public static IUserMessage SendReply(IUserMessage message, Embed embed)
         {
-            return message.ReplyAsync(embed: embed, allowedMentions: AllowedMentions.None).Result;
+            if (message.Id != LastRepliedMessage)
+            {
+                LastRepliedMessage = message.Id;
+                return message.ReplyAsync(embed: embed, allowedMentions: AllowedMentions.None).Result;
+            }
+            else
+            {
+                return message.Channel.SendMessageAsync(embed: embed, allowedMentions: AllowedMentions.None).Result;
+            }
         }
 
         /// <summary>

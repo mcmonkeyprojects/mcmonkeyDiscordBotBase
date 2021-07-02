@@ -68,6 +68,7 @@ namespace DiscordBotBase
         /// <param name="altContent">Alternate message content, if the message is being autosent.</param>
         public void Respond(IUserMessage message, bool outputUnknowns, bool wasMentioned, string altContent = null)
         {
+            UserCommands.LastRepliedMessage = 0;
             string messageText = altContent ?? message.Content;
             try
             {
