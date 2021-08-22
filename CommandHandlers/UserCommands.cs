@@ -40,16 +40,17 @@ namespace DiscordBotBase.CommandHandlers
         /// </summary>
         /// <param name="message">The message to reply to.</param>
         /// <param name="embed">The embed message to send.</param>
-        public static IUserMessage SendReply(IUserMessage message, Embed embed)
+        /// <param name="channelBackup">Optional backup channel if <paramref name="message"/> is null.</param>
+        public static IUserMessage SendReply(IUserMessage message, Embed embed, IMessageChannel channelBackup = null)
         {
-            if (message.Id != LastRepliedMessage)
+            if (message != null && message.Id != LastRepliedMessage)
             {
                 LastRepliedMessage = message.Id;
                 return message.ReplyAsync(embed: embed, allowedMentions: AllowedMentions.None).Result;
             }
             else
             {
-                return message.Channel.SendMessageAsync(embed: embed, allowedMentions: AllowedMentions.None).Result;
+                return (message?.Channel ?? channelBackup).SendMessageAsync(embed: embed, allowedMentions: AllowedMentions.None).Result;
             }
         }
 
@@ -74,25 +75,25 @@ namespace DiscordBotBase.CommandHandlers
         /// <summary>
         /// Sends a generic positive reply to a message in the same channel.
         /// </summary>
-        public static IUserMessage SendGenericPositiveMessageReply(IUserMessage message, string title, string description)
+        public static IUserMessage SendGenericPositiveMessageReply(IUserMessage message, string title, string description, IMessageChannel channelBackup = null)
         {
-            return SendReply(message, GetGenericPositiveMessageEmbed(title, description));
+            return SendReply(message, GetGenericPositiveMessageEmbed(title, description), channelBackup);
         }
 
         /// <summary>
         /// Sends a generic negative reply to a message in the same channel.
         /// </summary>
-        public static IUserMessage SendGenericNegativeMessageReply(IUserMessage message, string title, string description)
+        public static IUserMessage SendGenericNegativeMessageReply(IUserMessage message, string title, string description, IMessageChannel channelBackup = null)
         {
-            return SendReply(message, GetGenericNegativeMessageEmbed(title, description));
+            return SendReply(message, GetGenericNegativeMessageEmbed(title, description), channelBackup);
         }
 
         /// <summary>
         /// Sends an error message reply to a message in the same channel.
         /// </summary>
-        public static IUserMessage SendErrorMessageReply(IUserMessage message, string title, string description)
+        public static IUserMessage SendErrorMessageReply(IUserMessage message, string title, string description, IMessageChannel channelBackup = null)
         {
-            return SendReply(message, GetErrorMessageEmbed(title, description));
+            return SendReply(message, GetErrorMessageEmbed(title, description), channelBackup);
         }
 
         /// <summary>
