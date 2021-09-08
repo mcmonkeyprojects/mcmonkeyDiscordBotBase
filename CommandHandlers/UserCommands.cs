@@ -120,7 +120,17 @@ namespace DiscordBotBase.CommandHandlers
             return new EmbedBuilder().WithTitle(title).WithColor(255, 64, 32).WithThumbnailUrl(Constants.WARNING_ICON).WithDescription(description).Build();
         }
 
-        public static AsciiMatcher NeedsEscapeMatcher = new AsciiMatcher("\\`<*_|:~");
+        private static readonly AsciiMatcher NeedsEscapeMatcher = new AsciiMatcher("\\`<*_|:~");
+
+        private static string ReplaceIfMultiple(string text, char c, char replacement)
+        {
+            int first = text.IndexOf(c);
+            if (first != -1 && text.LastIndexOf(c) > first)
+            {
+                return text.Replace(c, replacement);
+            }
+            return text;
+        }
 
         /// <summary>
         /// Escapes user input for output. Best when wrapped in `backticks`.
@@ -132,7 +142,23 @@ namespace DiscordBotBase.CommandHandlers
             text = text.Replace("discord.gg", "discord\x00B7gg");
             if (NeedsEscapeMatcher.ContainsAnyMatch(text))
             {
-                text = text.Replace('\\', '/').Replace('`', '\'').Replace('<', '\x3008').Replace(':', '\xFF1A').Replace('*', '\x2731').Replace('_', '\xFF3F').Replace('|', '\xFF5C').Replace('~', '\x223C');
+                // These symbols could break `backticks`, and must always be escaped.
+                text = text.Replace('\\', '/').Replace('`', '\'');
+                // This is a formatting code in Discord that shouldn't apply at all in `backticks`, however with Discord's glitchy tendencies that's hard to trust.
+                text = text.Replace('<', '\x3008');
+                // Colon escape is only relevant to URLs. Not needed for content that lacks URLs.
+                if (text.Contains("://"))
+                {
+                    text = text.Replace(':', '\xFF1A');
+                }
+                // These are formatting codes, which shouldn't apply *at all* in content wrapped in `backticks`, however Discord is pretty bad at actually enforcing that internally.
+                // For example: "*test `tes*t`" will favor rendering the italics and thus fail to render the backtick code block.
+                // Because we can't guarantee what non-escaped content exists outside of the escaped block, this has to be escaped too.
+                text = text.Replace('*', '\x2731');
+                text = text.Replace('_', '\xFF3F');
+                // These characters only can do anything if you have at least two of the symbol within the body, so avoid escaping if not needed.
+                text = ReplaceIfMultiple(text, '|', '\xFF5C');
+                text = ReplaceIfMultiple(text, '~', '\x223C');
             }
             return text;
         }
