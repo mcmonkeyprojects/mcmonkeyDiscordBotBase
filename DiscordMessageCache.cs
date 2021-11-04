@@ -36,6 +36,9 @@ namespace DiscordBotBase
 
             /// <summary>Attachment URLs, newline separated, if any.</summary>
             public string Attachments;
+
+            /// <summary>The ID of the message this message replies to (or 0 if none).</summary>
+            public ulong RepliedTo;
         }
 
         /// <summary>The caching data for a single channel.</summary>
@@ -47,7 +50,6 @@ namespace DiscordBotBase
                 Size = _size;
                 IDsInSentOrder = new Queue<ulong>(Size + 32);
                 Cache = new Dictionary<ulong, CachedMessage>(Size * 2);
-
             }
 
             /// <summary>All cached message IDs, in order sent, for cache clearing.</summary>
@@ -81,7 +83,8 @@ namespace DiscordBotBase
                     {
                         SenderID = message.Author.Id,
                         Text = message.Content,
-                        Attachments = string.Join("\n", message.Attachments.Select(a => a.Url))
+                        Attachments = string.Join("\n", message.Attachments.Select(a => a.Url)),
+                        RepliedTo = message.Reference?.MessageId.GetValueOrDefault(0) ?? 0 // TODO: track if pinged or not
                     };
                 }
             }
