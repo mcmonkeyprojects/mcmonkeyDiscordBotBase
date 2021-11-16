@@ -5,19 +5,13 @@ using Discord;
 
 namespace DiscordBotBase
 {
-    /// <summary>
-    /// Common configurable options for a Discord bot.
-    /// </summary>
+    /// <summary>Common configurable options for a Discord bot.</summary>
     public class DiscordBotConfig
     {
-        /// <summary>
-        /// The message to display when an unknown command is input (if any).
-        /// </summary>
+        /// <summary>The message to display when an unknown command is input (if any).</summary>
         public string UnknownCommandMessage = "Unknown command. Consider the __**help**__ command?";
 
-        /// <summary>
-        /// An alternate handler for unknown commands (eg special info output) (if any).
-        /// </summary>
+        /// <summary>An alternate handler for unknown commands (eg special info output) (if any).</summary>
         public Action<string, CommandData> UnknownCommandHandler = null;
 
         /// <summary>
@@ -25,24 +19,16 @@ namespace DiscordBotBase
         /// </summary>
         public Func<IUserMessage, bool> ShouldPayAttentionToMessage = null;
 
-        /// <summary>
-        /// A method to run to initialize the bot.
-        /// </summary>
+        /// <summary>A method to run to initialize the bot.</summary>
         public Action<DiscordBot> Initialize = null;
 
-        /// <summary>
-        /// Extra message handling, after command handling is done.
-        /// </summary>
+        /// <summary>Extra message handling, after command handling is done.</summary>
         public Action<IUserMessage> OtherMessageHandling = null;
 
-        /// <summary>
-        /// Logic to run when the bot's about to shutdown.
-        /// </summary>
+        /// <summary>Logic to run when the bot's about to shutdown.</summary>
         public Action OnShutdown = null;
 
-        /// <summary>
-        /// The command prefix to use, if any. (If null, requires a direct ping).
-        /// </summary>
+        /// <summary>The command prefix to use, if any. (If null, requires a direct ping).</summary>
         public string CommandPrefix = "!";
 
         /// <summary>
@@ -51,14 +37,10 @@ namespace DiscordBotBase
         /// </summary>
         public int CacheSize = 256;
 
-        /// <summary>
-        /// Whether to automatically forcibly pre-fill the cache at startup.
-        /// </summary>
+        /// <summary>Whether to automatically forcibly pre-fill the cache at startup.</summary>
         public bool EnsureCaching = false;
 
-        /// <summary>
-        /// Whether to allow direct messages (if not, only guild messages are allowed).
-        /// </summary>
+        /// <summary>Whether to allow direct messages (if not, only guild messages are allowed).</summary>
         public bool AllowDMs = false;
     }
 }

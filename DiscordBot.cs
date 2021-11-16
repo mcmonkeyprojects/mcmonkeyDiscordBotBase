@@ -14,54 +14,34 @@ using FreneticUtilities.FreneticToolkit;
 
 namespace DiscordBotBase
 {
-    /// <summary>
-    /// Discord bot primary handler class.
-    /// </summary>
+    /// <summary>Discord bot primary handler class.</summary>
     public class DiscordBot
     {
-        /// <summary>
-        /// Configuration folder path.
-        /// </summary>
+        /// <summary>Configuration folder path.</summary>
         public const string CONFIG_FOLDER = "./config/";
 
-        /// <summary>
-        /// Bot token file path.
-        /// </summary>
+        /// <summary>Bot token file path.</summary>
         public const string TOKEN_FILE = CONFIG_FOLDER + "token.txt";
 
-        /// <summary>
-        /// Configuration file path.
-        /// </summary>
+        /// <summary>Configuration file path.</summary>
         public const string CONFIG_FILE = CONFIG_FOLDER + "config.fds";
 
-        /// <summary>
-        /// Bot token, read from config data.
-        /// </summary>
+        /// <summary>Bot token, read from config data.</summary>
         public static readonly string TOKEN = File.ReadAllText(TOKEN_FILE).Replace('\n', ' ').Replace('\r', ' ').Replace('\t', ' ').Replace(" ", "");
 
-        /// <summary>
-        /// The configuration file section.
-        /// </summary>
+        /// <summary>The configuration file section.</summary>
         public FDSSection ConfigFile;
 
-        /// <summary>
-        /// Internal Discord API bot Client handler.
-        /// </summary>
+        /// <summary>Internal Discord API bot Client handler.</summary>
         public DiscordSocketClient Client;
 
-        /// <summary>
-        /// The internal config for what this bot should be doing.
-        /// </summary>
+        /// <summary>The internal config for what this bot should be doing.</summary>
         public DiscordBotConfig ClientConfig;
 
-        /// <summary>
-        /// A cache of messages sent previously on Discord.
-        /// </summary>
+        /// <summary>A cache of messages sent previously on Discord.</summary>
         public DiscordMessageCache Cache;
 
-        /// <summary>
-        /// Bot command response handler.
-        /// </summary>
+        /// <summary>Bot command response handler.</summary>
         /// <param name="message">The message received.</param>
         /// <param name="outputUnknowns">Whether to output "unknown command" messages.</param>
         /// <param name="wasMentioned">Whether the bot was mentioned to trigger this command.</param>
@@ -127,14 +107,10 @@ namespace DiscordBotBase
             }
         }
 
-        /// <summary>
-        /// All valid user commands in a map of typable command name -> command method.
-        /// </summary>
+        /// <summary>All valid user commands in a map of typable command name -> command method.</summary>
         public readonly Dictionary<string, Action<CommandData>> ChatCommands = new(1024);
-        
-        /// <summary>
-        /// Saves the config file.
-        /// </summary>
+
+        /// <summary>Saves the config file.</summary>
         public void SaveConfig()
         {
             lock (ConfigSaveLock)
@@ -143,14 +119,10 @@ namespace DiscordBotBase
             }
         }
 
-        /// <summary>
-        /// Lock object for config file saving/loading.
-        /// </summary>
+        /// <summary>Lock object for config file saving/loading.</summary>
         public static LockObject ConfigSaveLock = new();
 
-        /// <summary>
-        /// Registers a command to a name and any number of aliases.
-        /// </summary>
+        /// <summary>Registers a command to a name and any number of aliases.</summary>
         public void RegisterCommand(Action<CommandData> command, params string[] names)
         {
             foreach (string name in names)
@@ -159,9 +131,7 @@ namespace DiscordBotBase
             }
         }
 
-        /// <summary>
-        /// Shuts the bot down entirely.
-        /// </summary>
+        /// <summary>Shuts the bot down entirely.</summary>
         public void Shutdown()
         {
             ClientConfig.OnShutdown?.Invoke();
@@ -170,19 +140,13 @@ namespace DiscordBotBase
             StoppedEvent.Set();
         }
 
-        /// <summary>
-        /// Signaled when the bot is stopped.
-        /// </summary>
+        /// <summary>Signaled when the bot is stopped.</summary>
         public ManualResetEvent StoppedEvent = new(false);
 
-        /// <summary>
-        /// Monitor object to help restart the bot as needed.
-        /// </summary>
+        /// <summary>Monitor object to help restart the bot as needed.</summary>
         public ConnectionMonitor BotMonitor;
 
-        /// <summary>
-        /// Initializes the bot object, connects, and runs the active loop.
-        /// </summary>
+        /// <summary>Initializes the bot object, connects, and runs the active loop.</summary>
         public void InitAndRun(string[] args)
         {
             Console.WriteLine("Preparing...");

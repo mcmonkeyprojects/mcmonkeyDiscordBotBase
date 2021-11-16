@@ -8,27 +8,19 @@ using Discord;
 
 namespace DiscordBotBase.CommandHandlers
 {
-    /// <summary>
-    /// Commands that most bots need.
-    /// </summary>
+    /// <summary>Commands that most bots need.</summary>
     public class CoreCommands : UserCommands
     {
-        /// <summary>
-        /// Constructs the core commands helper.
-        /// </summary>
+        /// <summary>Constructs the core commands helper.</summary>
         public CoreCommands(Func<IUser, bool> isUserAdmin)
         {
             UserAdminCheckMethod = isUserAdmin;
         }
 
-        /// <summary>
-        /// Method to check if the user is an admin.
-        /// </summary>
+        /// <summary>Method to check if the user is an admin.</summary>
         public Func<IUser, bool> UserAdminCheckMethod;
 
-        /// <summary>
-        /// Bot restart admin command.
-        /// </summary>
+        /// <summary>Bot restart admin command.</summary>
         public void CMD_Restart(CommandData command)
         {
             if (!UserAdminCheckMethod(command.Message.Author))

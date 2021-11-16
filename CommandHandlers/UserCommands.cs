@@ -10,34 +10,22 @@ using FreneticUtilities.FreneticToolkit;
 
 namespace DiscordBotBase.CommandHandlers
 {
-    /// <summary>
-    /// Abstract base class for commands that users can run.
-    /// </summary>
+    /// <summary>Abstract base class for commands that users can run.</summary>
     public abstract class UserCommands
     {
-        /// <summary>
-        /// Prefix for when the bot successfully handles user input.
-        /// </summary>
+        /// <summary>Prefix for when the bot successfully handles user input.</summary>
         public const string SUCCESS_PREFIX = "+++ ";
 
-        /// <summary>
-        /// Prefix for when the bot refuses user input.
-        /// </summary>
+        /// <summary>Prefix for when the bot refuses user input.</summary>
         public const string REFUSAL_PREFIX = "--- ";
 
-        /// <summary>
-        /// The backing bot instance.
-        /// </summary>
+        /// <summary>The backing bot instance.</summary>
         public DiscordBot Bot;
 
-        /// <summary>
-        /// Helper value to avoid sending a Discord reply to the same message twice in a row.
-        /// </summary>
+        /// <summary>Helper value to avoid sending a Discord reply to the same message twice in a row.</summary>
         public static ulong LastRepliedMessage;
 
-        /// <summary>
-        /// Sends a reply to a message in the same channel.
-        /// </summary>
+        /// <summary>Sends a reply to a message in the same channel.</summary>
         /// <param name="message">The message to reply to.</param>
         /// <param name="embed">The embed message to send.</param>
         /// <param name="channelBackup">Optional backup channel if <paramref name="message"/> is null.</param>
@@ -72,49 +60,37 @@ namespace DiscordBotBase.CommandHandlers
             return sentMessage;
         }
 
-        /// <summary>
-        /// Sends a generic positive reply to a message in the same channel.
-        /// </summary>
+        /// <summary>Sends a generic positive reply to a message in the same channel.</summary>
         public static IUserMessage SendGenericPositiveMessageReply(IUserMessage message, string title, string description, IMessageChannel channelBackup = null)
         {
             return SendReply(message, GetGenericPositiveMessageEmbed(title, description), channelBackup);
         }
 
-        /// <summary>
-        /// Sends a generic negative reply to a message in the same channel.
-        /// </summary>
+        /// <summary>Sends a generic negative reply to a message in the same channel.</summary>
         public static IUserMessage SendGenericNegativeMessageReply(IUserMessage message, string title, string description, IMessageChannel channelBackup = null)
         {
             return SendReply(message, GetGenericNegativeMessageEmbed(title, description), channelBackup);
         }
 
-        /// <summary>
-        /// Sends an error message reply to a message in the same channel.
-        /// </summary>
+        /// <summary>Sends an error message reply to a message in the same channel.</summary>
         public static IUserMessage SendErrorMessageReply(IUserMessage message, string title, string description, IMessageChannel channelBackup = null)
         {
             return SendReply(message, GetErrorMessageEmbed(title, description), channelBackup);
         }
 
-        /// <summary>
-        /// Creates an Embed object for a generic positive message.
-        /// </summary>
+        /// <summary>Creates an Embed object for a generic positive message.</summary>
         public static Embed GetGenericPositiveMessageEmbed(string title, string description)
         {
             return new EmbedBuilder().WithTitle(title).WithColor(0, 255, 255).WithDescription(description).Build();
         }
 
-        /// <summary>
-        /// Creates an Embed object for a generic negative message.
-        /// </summary>
+        /// <summary>Creates an Embed object for a generic negative message.</summary>
         public static Embed GetGenericNegativeMessageEmbed(string title, string description)
         {
             return new EmbedBuilder().WithTitle(title).WithColor(255, 128, 0).WithDescription(description).Build();
         }
 
-        /// <summary>
-        /// Creates an Embed object for an error message.
-        /// </summary>
+        /// <summary>Creates an Embed object for an error message.</summary>
         public static Embed GetErrorMessageEmbed(string title, string description)
         {
             return new EmbedBuilder().WithTitle(title).WithColor(255, 64, 32).WithThumbnailUrl(Constants.WARNING_ICON).WithDescription(description).Build();
@@ -132,9 +108,7 @@ namespace DiscordBotBase.CommandHandlers
             return text;
         }
 
-        /// <summary>
-        /// Escapes user input for output. Best when wrapped in `backticks`.
-        /// </summary>
+        /// <summary>Escapes user input for output. Best when wrapped in `backticks`.</summary>
         /// <param name="text">The user input text.</param>
         /// <returns>The escaped result.</returns>
         public static string EscapeUserInput(string text)
@@ -163,9 +137,7 @@ namespace DiscordBotBase.CommandHandlers
             return text;
         }
 
-        /// <summary>
-        /// Generates a link to a Discord message.
-        /// </summary>
+        /// <summary>Generates a link to a Discord message.</summary>
         public static string LinkToMessage(IMessage message)
         {
             return "https://discordapp.com/channels/" + (message.Channel as SocketGuildChannel).Guild.Id + "/" + message.Channel.Id + "/" + message.Id;

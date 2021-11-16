@@ -7,24 +7,16 @@ using Discord.Rest;
 
 namespace DiscordBotBase.Reactables
 {
-    /// <summary>
-    /// Helper for reactions to commands, usually of the "did you mean?" variety.
-    /// </summary>
+    /// <summary>Helper for reactions to commands, usually of the "did you mean?" variety.</summary>
     public static class ReactionsHandler
     {
-        /// <summary>
-        /// The maximum time a reaction click is still allowed for.
-        /// </summary>
+        /// <summary>The maximum time a reaction click is still allowed for.</summary>
         public static TimeSpan MAX_REACT_TIME = new(hours: 0, minutes: 5, seconds: 0);
 
-        /// <summary>
-        /// A map from message IDs to their reactable data.
-        /// </summary>
+        /// <summary>A map from message IDs to their reactable data.</summary>
         public static Dictionary<ulong, ReactableMessage> Reactables = new(128);
 
-        /// <summary>
-        /// Adds a new reactable to be tracked, starting at the current time slot.
-        /// </summary>
+        /// <summary>Adds a new reactable to be tracked, starting at the current time slot.</summary>
         /// <param name="originalMessage">The original message, from a user.</param>
         /// <param name="newMessage">The new message, from the bot.</param>
         /// <param name="command">The command to execute if affirmatively clicked.</param>
@@ -34,9 +26,7 @@ namespace DiscordBotBase.Reactables
             Console.WriteLine($"New reactable message: {newMessage.Id} with command '{command}'.");
         }
 
-        /// <summary>
-        /// Checks all currently tracked reactables, removing ones that have timed out.
-        /// </summary>
+        /// <summary>Checks all currently tracked reactables, removing ones that have timed out.</summary>
         public static void CheckReactables()
         {
             if (Reactables.Count == 0)
@@ -55,9 +45,7 @@ namespace DiscordBotBase.Reactables
             }
         }
 
-        /// <summary>
-        /// Tests a new reaction on a message, to see if it needs to be handled. If so, handling will automatically start.
-        /// </summary>
+        /// <summary>Tests a new reaction on a message, to see if it needs to be handled. If so, handling will automatically start.</summary>
         /// <param name="messageId">The relevant message ID.</param>
         /// <param name="reaction">The new reaction.</param>
         public static void TestReaction(ulong messageId, SocketReaction reaction)

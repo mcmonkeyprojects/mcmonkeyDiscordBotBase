@@ -16,37 +16,25 @@ using FreneticUtilities.FreneticToolkit;
 
 namespace DiscordBotBase
 {
-    /// <summary>
-    /// Helper to monitor a Discord bot's connectivity.
-    /// </summary>
+    /// <summary>Helper to monitor a Discord bot's connectivity.</summary>
     public class ConnectionMonitor
     {
-        /// <summary>
-        /// The bot to monitor.
-        /// </summary>
+        /// <summary>The bot to monitor.</summary>
         public DiscordBot Bot;
 
-        /// <summary>
-        /// Initializes the connection monitor. Call <see cref="StartMonitorLoop"/> to start the monitor loop.
-        /// </summary>
+        /// <summary>Initializes the connection monitor. Call <see cref="StartMonitorLoop"/> to start the monitor loop.</summary>
         public ConnectionMonitor(DiscordBot bot)
         {
             Bot = bot;
         }
 
-        /// <summary>
-        /// Whether the bot has ever connected to Discord (since this instance of the class was started).
-        /// </summary>
+        /// <summary>Whether the bot has ever connected to Discord (since this instance of the class was started).</summary>
         public bool ConnectedOnce = false;
 
-        /// <summary>
-        /// Whether the bot believes itself to be currently connected to Discord. (If false, the bot is preparing or running a reconnection cycle).
-        /// </summary>
+        /// <summary>Whether the bot believes itself to be currently connected to Discord. (If false, the bot is preparing or running a reconnection cycle).</summary>
         public bool ConnectedCurrently = false;
 
-        /// <summary>
-        /// Timespan the monitor should delay between connectivity checks.
-        /// </summary>
+        /// <summary>Timespan the monitor should delay between connectivity checks.</summary>
         public TimeSpan MonitorLoopTime = new(hours: 0, minutes: 1, seconds: 0);
 
         /// <summary>
@@ -61,9 +49,7 @@ namespace DiscordBotBase
         /// </summary>
         public bool StopAllLogic = false;
 
-        /// <summary>
-        /// Whether all new bot logic should be stopped (usually indicates that a new bot instance is taking over).
-        /// </summary>
+        /// <summary>Whether all new bot logic should be stopped (usually indicates that a new bot instance is taking over).</summary>
         public bool ShouldStopAllLogic()
         {
             lock (MonitorLock)
@@ -72,9 +58,7 @@ namespace DiscordBotBase
             }
         }
 
-        /// <summary>
-        /// Restarts the bot.
-        /// </summary>
+        /// <summary>Restarts the bot.</summary>
         public void ForceRestartBot()
         {
             lock (MonitorLock)
@@ -88,33 +72,23 @@ namespace DiscordBotBase
             DiscordBotBaseHelper.LaunchBotThread(Array.Empty<string>(),  Bot.ClientConfig);
         }
 
-        /// <summary>
-        /// Lock object for monitor variables.
-        /// </summary>
+        /// <summary>Lock object for monitor variables.</summary>
         public LockObject MonitorLock = new();
 
-        /// <summary>
-        /// The number of monitor loops thus far that the bot has not received input.
-        /// </summary>
+        /// <summary>The number of monitor loops thus far that the bot has not received input.</summary>
         public long LoopsSilent = 0;
 
-        /// <summary>
-        /// The number of monitor loops thus far that the bot has been active for.
-        /// </summary>
+        /// <summary>The number of monitor loops thus far that the bot has been active for.</summary>
         public long LoopsTotal = 0;
 
-        /// <summary>
-        /// Starts the monitor loop thread.
-        /// </summary>
+        /// <summary>Starts the monitor loop thread.</summary>
         public void StartMonitorLoop()
         {
             Thread thr = new(new ThreadStart(LoopUntilFail)) { Name = "discordbotconnectionmonitor" };
             thr.Start();
         }
 
-        /// <summary>
-        /// Loops the monitor until the bot has disconnected.
-        /// </summary>
+        /// <summary>Loops the monitor until the bot has disconnected.</summary>
         public void LoopUntilFail()
         {
             while (true)
@@ -139,9 +113,7 @@ namespace DiscordBotBase
             }
         }
 
-        /// <summary>
-        /// Internal loop method (ran by a separate looping thread handler) for the monitor.
-        /// </summary>
+        /// <summary>Internal loop method (ran by a separate looping thread handler) for the monitor.</summary>
         public void MonitorLoopOnce()
         {
             bool isConnected;

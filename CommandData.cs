@@ -5,24 +5,16 @@ using Discord;
 
 namespace DiscordBotBase
 {
-    /// <summary>
-    /// All data related to a user command.
-    /// </summary>
+    /// <summary>All data related to a user command.</summary>
     public class CommandData
     {
-        /// <summary>
-        /// The original Discord message.
-        /// </summary>
+        /// <summary>The original Discord message.</summary>
         public IUserMessage Message;
 
-        /// <summary>
-        /// The raw argument text, split by spaces, after the command base. Includes pings and other data.
-        /// </summary>
+        /// <summary>The raw argument text, split by spaces, after the command base. Includes pings and other data.</summary>
         public string[] RawArguments;
 
-        /// <summary>
-        /// The raw argument text, split by spaces, after the command base. Excludes pings or other special ignorable formats.
-        /// </summary>
+        /// <summary>The raw argument text, split by spaces, after the command base. Excludes pings or other special ignorable formats.</summary>
         public string[] CleanedArguments;
 
         /// <summary>
