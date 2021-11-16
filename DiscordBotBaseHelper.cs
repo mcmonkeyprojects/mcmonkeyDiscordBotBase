@@ -34,7 +34,7 @@ namespace DiscordBotBase
             {
                 ClientConfig = internalConfig
             };
-            Thread thr = new Thread(new ParameterizedThreadStart(BotThread)) { Name = "discordbotthread" };
+            Thread thr = new(new ParameterizedThreadStart(BotThread)) { Name = "discordbotthread" };
             thr.Start(args);
         }
 

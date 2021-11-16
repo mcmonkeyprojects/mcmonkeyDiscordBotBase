@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>DiscordBotBase</RootNamespace>
     <AssemblyName>mcmonkeyDiscordBotBase</AssemblyName>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>Latest</LangVersion>
     <Product>mcmonkeyDiscordBotBase</Product>
     <PackageId>mcmonkeyDiscordBotBase</PackageId>

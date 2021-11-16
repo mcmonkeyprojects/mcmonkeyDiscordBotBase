@@ -120,7 +120,7 @@ namespace DiscordBotBase.CommandHandlers
             return new EmbedBuilder().WithTitle(title).WithColor(255, 64, 32).WithThumbnailUrl(Constants.WARNING_ICON).WithDescription(description).Build();
         }
 
-        private static readonly AsciiMatcher NeedsEscapeMatcher = new AsciiMatcher("\\`<*_|:~");
+        private static readonly AsciiMatcher NeedsEscapeMatcher = new("\\`<*_|:~");
 
         private static string ReplaceIfMultiple(string text, char c, char replacement)
         {

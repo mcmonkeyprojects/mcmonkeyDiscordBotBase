@@ -12,6 +12,7 @@ using Discord.WebSocket;
 using System.Diagnostics;
 using FreneticUtilities.FreneticExtensions;
 using FreneticUtilities.FreneticDataSyntax;
+using FreneticUtilities.FreneticToolkit;
 
 namespace DiscordBotBase
 {
@@ -46,7 +47,7 @@ namespace DiscordBotBase
         /// <summary>
         /// Timespan the monitor should delay between connectivity checks.
         /// </summary>
-        public TimeSpan MonitorLoopTime = new TimeSpan(hours: 0, minutes: 1, seconds: 0);
+        public TimeSpan MonitorLoopTime = new(hours: 0, minutes: 1, seconds: 0);
 
         /// <summary>
         /// Whether the monitor has already detected a potential issue (but has not yet enforced a restart,
@@ -90,7 +91,7 @@ namespace DiscordBotBase
         /// <summary>
         /// Lock object for monitor variables.
         /// </summary>
-        public Object MonitorLock = new Object();
+        public LockObject MonitorLock = new();
 
         /// <summary>
         /// The number of monitor loops thus far that the bot has not received input.
@@ -107,7 +108,7 @@ namespace DiscordBotBase
         /// </summary>
         public void StartMonitorLoop()
         {
-            Thread thr = new Thread(new ThreadStart(LoopUntilFail)) { Name = "discordbotconnectionmonitor" };
+            Thread thr = new(new ThreadStart(LoopUntilFail)) { Name = "discordbotconnectionmonitor" };
             thr.Start();
         }
 

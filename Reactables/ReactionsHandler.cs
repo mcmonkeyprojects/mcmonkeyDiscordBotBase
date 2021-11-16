@@ -15,12 +15,12 @@ namespace DiscordBotBase.Reactables
         /// <summary>
         /// The maximum time a reaction click is still allowed for.
         /// </summary>
-        public static TimeSpan MAX_REACT_TIME = new TimeSpan(hours: 0, minutes: 5, seconds: 0);
+        public static TimeSpan MAX_REACT_TIME = new(hours: 0, minutes: 5, seconds: 0);
 
         /// <summary>
         /// A map from message IDs to their reactable data.
         /// </summary>
-        public static Dictionary<ulong, ReactableMessage> Reactables = new Dictionary<ulong, ReactableMessage>(128);
+        public static Dictionary<ulong, ReactableMessage> Reactables = new(128);
 
         /// <summary>
         /// Adds a new reactable to be tracked, starting at the current time slot.

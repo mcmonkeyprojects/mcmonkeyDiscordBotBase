@@ -100,7 +100,7 @@ namespace DiscordBotBase
         }
 
         /// <summary>A mapping of channel IDs to channel message caches.</summary>
-        public ConcurrentDictionary<ulong, SingleChannelCache> ChannelCaches = new ConcurrentDictionary<ulong, SingleChannelCache>();
+        public ConcurrentDictionary<ulong, SingleChannelCache> ChannelCaches = new();
 
         /// <summary>Gets the cache handler for a specific channel.</summary>
         public SingleChannelCache GetCacheForChannel(ulong channelID)
@@ -145,7 +145,7 @@ namespace DiscordBotBase
                     try
                     {
                         SingleChannelCache cache = GetCacheForChannel(channel.Id);
-                        List<IMessage> messages = new List<IMessage>();
+                        List<IMessage> messages = new();
                         channel.GetMessagesAsync(amountToFill).ForEachAwaitAsync(async col =>
                         {
                             messages.AddRange(col);

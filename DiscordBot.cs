@@ -77,12 +77,12 @@ namespace DiscordBotBase
                     messageText = messageText[ClientConfig.CommandPrefix.Length..];
                 }
                 string[] messageDataSplit = messageText.Split(' ');
-                StringBuilder resultBuilder = new StringBuilder(messageText.Length);
-                List<string> argsCleaned = new List<string>();
-                List<string> argsRaw = new List<string>();
+                StringBuilder resultBuilder = new(messageText.Length);
+                List<string> argsCleaned = new();
+                List<string> argsRaw = new();
                 foreach (string originalArg in messageDataSplit)
                 {
-                    if (originalArg.Contains("<@") && originalArg.Contains(">"))
+                    if (originalArg.Contains("<@") && originalArg.Contains('>'))
                     {
                         if (originalArg[2..^1].Replace("!", "") != Client.CurrentUser.Id.ToString())
                         {
@@ -107,7 +107,7 @@ namespace DiscordBotBase
                 string commandNameLowered = argsCleaned[0].ToLowerInvariant();
                 argsCleaned.RemoveAt(0);
                 argsRaw.RemoveAt(0);
-                CommandData commandData = new CommandData() { Message = message, CleanedArguments = argsCleaned.ToArray(), RawArguments = argsRaw.ToArray(), WasBotMention = wasMentioned };
+                CommandData commandData = new() { Message = message, CleanedArguments = argsCleaned.ToArray(), RawArguments = argsRaw.ToArray(), WasBotMention = wasMentioned };
                 if (ChatCommands.TryGetValue(commandNameLowered, out Action<CommandData> commandHandlerMethod))
                 {
                     commandHandlerMethod.Invoke(commandData);
@@ -130,7 +130,7 @@ namespace DiscordBotBase
         /// <summary>
         /// All valid user commands in a map of typable command name -> command method.
         /// </summary>
-        public readonly Dictionary<string, Action<CommandData>> ChatCommands = new Dictionary<string, Action<CommandData>>(1024);
+        public readonly Dictionary<string, Action<CommandData>> ChatCommands = new(1024);
         
         /// <summary>
         /// Saves the config file.
@@ -146,7 +146,7 @@ namespace DiscordBotBase
         /// <summary>
         /// Lock object for config file saving/loading.
         /// </summary>
-        public static LockObject ConfigSaveLock = new LockObject();
+        public static LockObject ConfigSaveLock = new();
 
         /// <summary>
         /// Registers a command to a name and any number of aliases.
@@ -173,7 +173,7 @@ namespace DiscordBotBase
         /// <summary>
         /// Signaled when the bot is stopped.
         /// </summary>
-        public ManualResetEvent StoppedEvent = new ManualResetEvent(false);
+        public ManualResetEvent StoppedEvent = new(false);
 
         /// <summary>
         /// Monitor object to help restart the bot as needed.
@@ -196,7 +196,7 @@ namespace DiscordBotBase
             }
             Cache = new DiscordMessageCache(this, ConfigFile.GetInt("discord_cache_size", ClientConfig.CacheSize).Value);
             Console.WriteLine("Loading Discord...");
-            DiscordSocketConfig config = new DiscordSocketConfig
+            DiscordSocketConfig config = new()
             {
                 MessageCacheSize = 50,
                 AlwaysDownloadUsers = true
