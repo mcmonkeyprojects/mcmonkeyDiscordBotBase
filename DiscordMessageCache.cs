@@ -121,13 +121,16 @@ namespace DiscordBotBase
             {
                 return;
             }
-            if (MessagesPerChannel < 150)
+            if (MessagesPerChannel > 150)
             {
                 Console.WriteLine("Performing initial cache pre-fill pass");
                 PrefillInternal(50);
             }
-            Console.WriteLine("Performing full cache pre-fill");
-            PrefillInternal(MessagesPerChannel);
+            if (MessagesPerChannel > 50)
+            {
+                Console.WriteLine($"Performing full cache pre-fill of {MessagesPerChannel} messages per channel");
+                PrefillInternal(MessagesPerChannel);
+            }
             Console.WriteLine("Cache pre-fill complete.");
         }
 
