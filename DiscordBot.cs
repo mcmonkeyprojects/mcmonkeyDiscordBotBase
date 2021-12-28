@@ -319,6 +319,10 @@ namespace DiscordBotBase
             };
             Client.SlashCommandExecuted += (command) =>
             {
+                if (BotMonitor.ShouldStopAllLogic())
+                {
+                    return Task.CompletedTask;
+                }
                 Console.WriteLine($"Found slash command '{command.CommandName}' from user id {command.User.Id} in channel id {command.Channel.Id}");
                 if (!ClientConfig.AllowSlashCommandsInDM && command.Channel is not IGuildChannel)
                 {

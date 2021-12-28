@@ -146,6 +146,10 @@ namespace DiscordBotBase.CommandHandlers
         /// <returns>The escaped result.</returns>
         public static string EscapeUserInput(string text)
         {
+            if (text is null)
+            {
+                return "(null)";
+            }
             text = text.Replace("discord.gg", "discord\x00B7gg");
             if (NeedsEscapeMatcher.ContainsAnyMatch(text))
             {
