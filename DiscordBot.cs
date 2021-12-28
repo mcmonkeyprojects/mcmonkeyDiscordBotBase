@@ -163,7 +163,8 @@ namespace DiscordBotBase
             DiscordSocketConfig config = new()
             {
                 MessageCacheSize = 50,
-                AlwaysDownloadUsers = true
+                AlwaysDownloadUsers = true,
+                GatewayIntents = ClientConfig.GatewayIntents
             };
             //config.LogLevel = LogSeverity.Debug;
             Client = new DiscordSocketClient(config);
