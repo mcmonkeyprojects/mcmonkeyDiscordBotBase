@@ -42,6 +42,14 @@ namespace DiscordBotBase.CommandHandlers
             }
         }
 
+        /// <summary>Sends a reply to a slash command.</summary>
+        /// <param name="command">The command to reply to.</param>
+        /// <param name="embed">The embed message to send.</param>
+        public static void SendReply(SocketSlashCommand command, Embed embed)
+        {
+            command.RespondAsync(embed: embed, allowedMentions: AllowedMentions.None).Wait();
+        }
+
         /// <summary>
         /// Sends a "did you mean ...?" style reply. This adds a clickable reaction that triggers an automatic command when clicked by the user that originally did the command within a certain time limit.
         /// </summary>
@@ -60,16 +68,34 @@ namespace DiscordBotBase.CommandHandlers
             return sentMessage;
         }
 
+        /// <summary>Sends a generic positive reply to a slash command.</summary>
+        public static void SendGenericPositiveMessageReply(SocketSlashCommand command, string title, string description)
+        {
+            SendReply(command, GetGenericPositiveMessageEmbed(title, description));
+        }
+
         /// <summary>Sends a generic positive reply to a message in the same channel.</summary>
         public static IUserMessage SendGenericPositiveMessageReply(IUserMessage message, string title, string description, IMessageChannel channelBackup = null)
         {
             return SendReply(message, GetGenericPositiveMessageEmbed(title, description), channelBackup);
         }
 
+        /// <summary>Sends a generic negative reply to a slash command.</summary>
+        public static void SendGenericNegativeMessageReply(SocketSlashCommand command, string title, string description)
+        {
+            SendReply(command, GetGenericNegativeMessageEmbed(title, description));
+        }
+
         /// <summary>Sends a generic negative reply to a message in the same channel.</summary>
         public static IUserMessage SendGenericNegativeMessageReply(IUserMessage message, string title, string description, IMessageChannel channelBackup = null)
         {
             return SendReply(message, GetGenericNegativeMessageEmbed(title, description), channelBackup);
+        }
+
+        /// <summary>Sends an error message reply to a slash command in the same channel.</summary>
+        public static void SendErrorMessageReply(SocketSlashCommand command, string title, string description)
+        {
+            SendReply(command, GetErrorMessageEmbed(title, description));
         }
 
         /// <summary>Sends an error message reply to a message in the same channel.</summary>

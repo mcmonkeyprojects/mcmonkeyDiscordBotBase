@@ -11,6 +11,7 @@ using FreneticUtilities.FreneticDataSyntax;
 using DiscordBotBase.CommandHandlers;
 using DiscordBotBase.Reactables;
 using FreneticUtilities.FreneticToolkit;
+using FreneticUtilities.FreneticExtensions;
 
 namespace DiscordBotBase
 {
@@ -40,6 +41,21 @@ namespace DiscordBotBase
 
         /// <summary>A cache of messages sent previously on Discord.</summary>
         public DiscordMessageCache Cache;
+
+        /// <summary>Lock object for config file saving/loading.</summary>
+        public static LockObject ConfigSaveLock = new();
+
+        /// <summary>Signaled when the bot is stopped.</summary>
+        public ManualResetEvent StoppedEvent = new(false);
+
+        /// <summary>Monitor object to help restart the bot as needed.</summary>
+        public ConnectionMonitor BotMonitor;
+
+        /// <summary>All valid user chat commands in a map of typable command name -> command method.</summary>
+        public readonly Dictionary<string, Action<CommandData>> ChatCommands = new(1024);
+
+        /// <summary>All valid slash commands in a map of typable command name -> command method.</summary>
+        public readonly Dictionary<string, Action<SocketSlashCommand>> SlashCommands = new(1024);
 
         /// <summary>Bot command response handler.</summary>
         /// <param name="message">The message received.</param>
@@ -84,7 +100,7 @@ namespace DiscordBotBase
                 }
                 string fullMessageCleaned = resultBuilder.ToString();
                 Console.WriteLine("Found input from: (" + message.Author.Username + "), in channel: " + message.Channel.Name + ": " + fullMessageCleaned);
-                string commandNameLowered = argsCleaned[0].ToLowerInvariant();
+                string commandNameLowered = argsCleaned[0].ToLowerFast();
                 argsCleaned.RemoveAt(0);
                 argsRaw.RemoveAt(0);
                 CommandData commandData = new() { Message = message, CleanedArguments = argsCleaned.ToArray(), RawArguments = argsRaw.ToArray(), WasBotMention = wasMentioned };
@@ -107,9 +123,6 @@ namespace DiscordBotBase
             }
         }
 
-        /// <summary>All valid user commands in a map of typable command name -> command method.</summary>
-        public readonly Dictionary<string, Action<CommandData>> ChatCommands = new(1024);
-
         /// <summary>Saves the config file.</summary>
         public void SaveConfig()
         {
@@ -119,15 +132,21 @@ namespace DiscordBotBase
             }
         }
 
-        /// <summary>Lock object for config file saving/loading.</summary>
-        public static LockObject ConfigSaveLock = new();
-
         /// <summary>Registers a command to a name and any number of aliases.</summary>
         public void RegisterCommand(Action<CommandData> command, params string[] names)
         {
             foreach (string name in names)
             {
-                ChatCommands.Add(name, command);
+                ChatCommands.Add(name.ToLowerFast(), command);
+            }
+        }
+
+        /// <summary>Registers a slash command to a name and any number of aliases.</summary>
+        public void RegisterSlashCommand(Action<SocketSlashCommand> command, params string[] names)
+        {
+            foreach (string name in names)
+            {
+                SlashCommands.Add(name.ToLowerFast(), command);
             }
         }
 
@@ -139,12 +158,6 @@ namespace DiscordBotBase
             Client.Dispose();
             StoppedEvent.Set();
         }
-
-        /// <summary>Signaled when the bot is stopped.</summary>
-        public ManualResetEvent StoppedEvent = new(false);
-
-        /// <summary>Monitor object to help restart the bot as needed.</summary>
-        public ConnectionMonitor BotMonitor;
 
         /// <summary>Initializes the bot object, connects, and runs the active loop.</summary>
         public void InitAndRun(string[] args)
@@ -302,6 +315,19 @@ namespace DiscordBotBase
                     return Task.CompletedTask;
                 }
                 Cache.CacheMessage(socketMessage);
+                return Task.CompletedTask;
+            };
+            Client.SlashCommandExecuted += (command) =>
+            {
+                if (!ClientConfig.AllowSlashCommandsInDM && command.Channel is not IGuildChannel)
+                {
+                    command.RespondAsync("Commands don't work there.", ephemeral: true);
+                    return Task.CompletedTask;
+                }
+                if (!SlashCommands.TryGetValue(command.CommandName.ToLowerFast(), out Action<SocketSlashCommand> cmd))
+                {
+                    command.RespondAsync("Unknown command.", ephemeral: true);
+                }
                 return Task.CompletedTask;
             };
             Console.WriteLine("Logging in to Discord...");

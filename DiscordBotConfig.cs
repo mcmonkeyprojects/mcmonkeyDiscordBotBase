@@ -45,5 +45,8 @@ namespace DiscordBotBase
 
         /// <summary>What gateway intents to connect with. Defaults to 'AllUnprivileged | GuildMessages | GuildMessageReactions'.</summary>
         public GatewayIntents GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMessages | GatewayIntents.GuildMessageReactions;
+
+        /// <summary>Whether DM'd slash commands are ever allowed.</summary>
+        public bool AllowSlashCommandsInDM = false;
     }
 }
