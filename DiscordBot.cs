@@ -329,7 +329,14 @@ namespace DiscordBotBase
                 {
                     command.RespondAsync("Unknown command.", ephemeral: true);
                 }
-                cmd(command);
+                try
+                {
+                    cmd(command);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Slash command '{command.CommandName}' execution errored: {ex}");
+                }
                 return Task.CompletedTask;
             };
             Console.WriteLine("Logging in to Discord...");
