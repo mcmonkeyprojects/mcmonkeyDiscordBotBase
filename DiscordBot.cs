@@ -319,6 +319,7 @@ namespace DiscordBotBase
             };
             Client.SlashCommandExecuted += (command) =>
             {
+                Console.WriteLine($"Found slash command '{command.CommandName}' from user id {command.User.Id} in channel id {command.Channel.Id}");
                 if (!ClientConfig.AllowSlashCommandsInDM && command.Channel is not IGuildChannel)
                 {
                     command.RespondAsync("Commands don't work there.", ephemeral: true);
@@ -328,6 +329,7 @@ namespace DiscordBotBase
                 {
                     command.RespondAsync("Unknown command.", ephemeral: true);
                 }
+                cmd(command);
                 return Task.CompletedTask;
             };
             Console.WriteLine("Logging in to Discord...");
