@@ -43,7 +43,7 @@ namespace DiscordBotBase
         /// <summary>Whether to allow direct messages (if not, only guild messages are allowed).</summary>
         public bool AllowDMs = false;
 
-        /// <summary>What gateway intents to connect with. Defaults to 'AllUnprivileged | GuildMessages'.</summary>
-        public GatewayIntents GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMessages;
+        /// <summary>What gateway intents to connect with. Defaults to 'AllUnprivileged | GuildMessages | GuildMessageReactions'.</summary>
+        public GatewayIntents GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMessages | GatewayIntents.GuildMessageReactions;
     }
 }
