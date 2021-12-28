@@ -47,7 +47,14 @@ namespace DiscordBotBase.CommandHandlers
         /// <param name="embed">The embed message to send.</param>
         public static void SendReply(SocketSlashCommand command, Embed embed)
         {
-            command.RespondAsync(embed: embed, allowedMentions: AllowedMentions.None).Wait();
+            if (command.HasResponded)
+            {
+                command.ModifyOriginalResponseAsync((p) => { p.Embed = embed; p.AllowedMentions = AllowedMentions.None; }).Wait();
+            }
+            else
+            {
+                command.RespondAsync(embed: embed, allowedMentions: AllowedMentions.None).Wait();
+            }
         }
 
         /// <summary>
