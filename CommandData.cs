@@ -21,5 +21,8 @@ namespace DiscordBotBase
         /// Set to 'true' when the command was written like "@Bot commandhere", set to 'false' when the command was written with a prefix like "!commandhere" (or other special execution method).
         /// </summary>
         public bool WasBotMention;
+
+        /// <summary>The relevant bot instance.</summary>
+        public DiscordBot Bot;
     }
 }
