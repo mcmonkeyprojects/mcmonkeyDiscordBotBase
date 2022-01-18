@@ -3,6 +3,7 @@ using System.Text;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -56,6 +57,16 @@ namespace DiscordBotBase
 
         /// <summary>All valid slash commands in a map of typable command name -> command method.</summary>
         public readonly Dictionary<string, Action<SocketSlashCommand>> SlashCommands = new(1024);
+
+        /// <summary>A set of <see cref="MessageBulker"/> instances you can optionally use via <see cref="GetBulker(ulong)"/>.</summary>
+        public readonly ConcurrentDictionary<ulong, MessageBulker> GenericBulkers = new();
+
+        /// <summary>Gets or create a <see cref="MessageBulker"/> for a given channel, with exactly one bulker for each channel.
+        /// Mentions default to disabled, which can be changed by editing the returned instance. Note that all messages in any one bulker either allow mentions or don't, you can't choose per-message with a bulker.</summary>
+        public MessageBulker GetBulker(IMessageChannel channel)
+        {
+            return GenericBulkers.GetOrCreate(channel.Id, () => new MessageBulker(this, channel));
+        }
 
         /// <summary>Bot command response handler.</summary>
         /// <param name="message">The message received.</param>
