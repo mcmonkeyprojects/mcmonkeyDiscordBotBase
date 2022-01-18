@@ -76,9 +76,9 @@ namespace DiscordBotBase
             /// <summary>The internal direct send-to-channel message. Do not call directly, use <see cref="Send(string)"/>.</summary>
             public void DoSend()
             {
+                StringBuilder output = new();
                 lock (Locker)
                 {
-                    StringBuilder output = new();
                     while (ToSend.Any())
                     {
                         string next = ToSend.Peek();
@@ -102,8 +102,19 @@ namespace DiscordBotBase
                         return;
                     }
                     LastSentTicks = Environment.TickCount64;
-                    Self.Channel.SendMessageAsync(output.ToString(), allowedMentions: Self.Mentions).Wait();
                 }
+                MessageBulker self = Self;
+                Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        self.Channel.SendMessageAsync(output.ToString(), allowedMentions: self.Mentions).Wait();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.Error.WriteLine($"MessageBulker encountered error while sending message to channel {self.Channel.Id}: {ex}");
+                    }
+                });
             }
         }
 
