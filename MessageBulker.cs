@@ -45,7 +45,7 @@ namespace DiscordBotBase
             public static void WaitingTask(object _self)
             {
                 MessageBulker self = _self as MessageBulker;
-                Task.Delay(400).Wait();
+                Task.Delay(300).Wait();
                 lock (self.Internal.Locker)
                 {
                     self.Internal.HasSendTaskActive = false;
