@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using FreneticUtilities.FreneticToolkit;
 using Discord;
@@ -41,15 +42,16 @@ namespace DiscordBotBase
             public bool HasSendTaskActive;
 
             /// <summary>The internal method that gets scheduled for later when scheduling a delayed send task.</summary>
-            public void WaitingTask()
+            public static void WaitingTask(object _self)
             {
+                MessageBulker self = _self as MessageBulker;
                 Task.Delay(400).Wait();
-                lock (Locker)
+                lock (self.Internal.Locker)
                 {
-                    HasSendTaskActive = false;
+                    self.Internal.HasSendTaskActive = false;
                     try
                     {
-                        DoSend();
+                        self.Internal.DoSend();
                     }
                     catch (Exception ex)
                     {
@@ -69,8 +71,7 @@ namespace DiscordBotBase
                     }
                     HasSendTaskActive = true;
                 }
-                MessageBulker self = Self; // C# gets iffy around structs and tasks, don't remove this
-                Task.Factory.StartNew(() => self.Internal.WaitingTask);
+                new Thread(new ParameterizedThreadStart(WaitingTask)).Start(Self); // Not using tasks due to C# being janky around tasks with structs
             }
 
             /// <summary>The internal direct send-to-channel message. Do not call directly, use <see cref="Send(string)"/>.</summary>
@@ -104,7 +105,7 @@ namespace DiscordBotBase
                     LastSentTicks = Environment.TickCount64;
                 }
                 MessageBulker self = Self;
-                Task.Factory.StartNew(() =>
+                Task.Factory.StartNew(() => // TODO: Does this need to be swapped to Thread as well?
                 {
                     try
                     {
@@ -136,7 +137,7 @@ namespace DiscordBotBase
             lock (Internal.Locker)
             {
                 Internal.ToSend.Enqueue(text);
-                if (!Internal.HasSendTaskActive && (Internal.LastSentTicks <= 0 || Internal.LastSentTicks + 500 < Environment.TickCount64 || text.Length > 1800))
+                if (!Internal.HasSendTaskActive && (Internal.LastSentTicks <= 0 || Internal.LastSentTicks + 1500 < Environment.TickCount64 || text.Length > 1800))
                 {
                     Internal.DoSend();
                 }
