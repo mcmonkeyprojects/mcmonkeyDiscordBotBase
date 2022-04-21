@@ -141,7 +141,7 @@ namespace DiscordBotBase.CommandHandlers
             return text;
         }
 
-        /// <summary>Escapes user input for output. Best when wrapped in `backticks`.</summary>
+        /// <summary>Escapes user input for output for when it will be wrapped `backticks`. For non-backtick version, use <see cref="EscapeForPlainText(string)"/>.</summary>
         /// <param name="text">The user input text.</param>
         /// <returns>The escaped result.</returns>
         public static string EscapeUserInput(string text)
@@ -170,6 +170,21 @@ namespace DiscordBotBase.CommandHandlers
                 // These characters only can do anything if you have at least two of the symbol within the body, so avoid escaping if not needed.
                 text = ReplaceIfMultiple(text, '|', '\xFF5C');
                 text = ReplaceIfMultiple(text, '~', '\x223C');
+            }
+            return text;
+        }
+
+        /// <summary>Escapes user input for when output will NOT be wrapped in backticks. For the backtick-compatible version, use <see cref="EscapeUserInput(string)"/>.</summary>
+        public static string EscapeForPlainText(string text)
+        {
+            if (text is null)
+            {
+                return "(null)";
+            }
+            text = text.Replace("discord.gg", "discord\\.gg");
+            if (NeedsEscapeMatcher.ContainsAnyMatch(text))
+            {
+                text = text.Replace("\\", "\\\\").Replace("`", "\\`").Replace("<", "\\<").Replace("@", "\\@").Replace("#", "\\#").Replace("&", "\\&").Replace("*", "\\*").Replace("~", "\\~").Replace("_", "\\_").Replace("|", "\\|").Replace(":", "\\:");
             }
             return text;
         }
