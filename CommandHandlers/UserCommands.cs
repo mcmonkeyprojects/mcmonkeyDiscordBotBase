@@ -181,11 +181,11 @@ namespace DiscordBotBase.CommandHandlers
             {
                 return "(null)";
             }
-            text = text.Replace("discord.gg", "discord\\.gg");
             if (NeedsEscapeMatcher.ContainsAnyMatch(text))
             {
                 text = text.Replace("\\", "\\\\").Replace("`", "\\`").Replace("<", "\\<").Replace("@", "\\@").Replace("#", "\\#").Replace("&", "\\&").Replace("*", "\\*").Replace("~", "\\~").Replace("_", "\\_").Replace("|", "\\|").Replace(":", "\\:");
             }
+            text = text.Replace("discord.gg", "discord\\.gg");
             return text;
         }
 
