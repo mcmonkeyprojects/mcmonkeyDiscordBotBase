@@ -282,7 +282,7 @@ namespace DiscordBotBase
                 }
                 ReactionsHandler.CheckReactables();
                 BotMonitor.LoopsSilent = 0;
-                if (message.Author.IsBot || message.Author.IsWebhook)
+                if (message.Author.IsWebhook || (message.Author.IsBot && ClientConfig.ShouldIgnoreBot(message)))
                 {
                     return Task.CompletedTask;
                 }

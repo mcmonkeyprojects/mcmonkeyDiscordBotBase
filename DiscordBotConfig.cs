@@ -14,9 +14,7 @@ namespace DiscordBotBase
         /// <summary>An alternate handler for unknown commands (eg special info output) (if any).</summary>
         public Action<string, CommandData> UnknownCommandHandler = null;
 
-        /// <summary>
-        /// A method that will return a bool indicating whether the client should respond to commands in the message given in the parameter (usually based on the channel details).
-        /// </summary>
+        /// <summary>A method that will return a bool indicating whether the client should respond to commands in the message given in the parameter (usually based on the channel details).</summary>
         public Func<IUserMessage, bool> ShouldPayAttentionToMessage = null;
 
         /// <summary>A method to run to initialize the bot.</summary>
@@ -48,5 +46,8 @@ namespace DiscordBotBase
 
         /// <summary>Whether DM'd slash commands are ever allowed.</summary>
         public bool AllowSlashCommandsInDM = false;
+
+        /// <summary>A method that will return true if a bot message should be ignored, or false if it should be parsed. Note that webhooks are always ignored.</summary>
+        public Func<IMessage, bool> ShouldIgnoreBot = (_) => true;
     }
 }
