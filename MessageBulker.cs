@@ -113,7 +113,7 @@ namespace DiscordBotBase
                     }
                     catch (Exception ex)
                     {
-                        Console.Error.WriteLine($"MessageBulker encountered error while sending message to channel {self.Channel.Id}: {ex}");
+                        Console.Error.WriteLine($"MessageBulker encountered error while sending message to channel {self.Channel.Id}:\nMessage: {output}\nException: {ex}");
                     }
                 });
             }
@@ -136,7 +136,16 @@ namespace DiscordBotBase
         {
             lock (Internal.Locker)
             {
-                Internal.ToSend.Enqueue(text);
+                if (text.Length > 1990)
+                {
+                    Internal.ToSend.Enqueue(text[..1950]);
+                    Send(text[1950..]);
+                    return;
+                }
+                else
+                {
+                    Internal.ToSend.Enqueue(text);
+                }
                 if (!Internal.HasSendTaskActive && (Internal.LastSentTicks <= 0 || Internal.LastSentTicks + 1500 < Environment.TickCount64 || text.Length > 1800))
                 {
                     Internal.DoSend();
