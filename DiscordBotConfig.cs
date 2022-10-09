@@ -42,7 +42,7 @@ namespace DiscordBotBase
         public bool AllowDMs = false;
 
         /// <summary>What gateway intents to connect with. Defaults to 'AllUnprivileged | GuildMessages | GuildMessageReactions | MessageContent'.</summary>
-        public GatewayIntents GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMessages | GatewayIntents.GuildMessageReactions | GatewayIntents.MessageContent;
+        public GatewayIntents GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.GuildMessages | GatewayIntents.GuildMessageReactions | GatewayIntents.MessageContent | GatewayIntents.GuildMembers;
 
         /// <summary>Whether DM'd slash commands are ever allowed.</summary>
         public bool AllowSlashCommandsInDM = false;
