@@ -129,7 +129,7 @@ namespace DiscordBotBase.CommandHandlers
             return new EmbedBuilder().WithTitle(title).WithColor(255, 64, 32).WithThumbnailUrl(Constants.WARNING_ICON).WithDescription(description).Build();
         }
 
-        private static readonly AsciiMatcher NeedsEscapeMatcher = new("\\`<*_|:~");
+        private static readonly AsciiMatcher NeedsEscapeMatcher = new("\\`<*_|:~[(/");
 
         private static string ReplaceIfMultiple(string text, char c, char replacement)
         {
@@ -183,7 +183,9 @@ namespace DiscordBotBase.CommandHandlers
             }
             if (NeedsEscapeMatcher.ContainsAnyMatch(text))
             {
-                text = text.Replace("\\", "\\\\").Replace("`", "\\`").Replace("<", "\\<").Replace("@", "\\@").Replace("#", "\\#").Replace("&", "\\&").Replace("*", "\\*").Replace("~", "\\~").Replace("_", "\\_").Replace("|", "\\|").Replace(":", "\\:");
+                text = text.Replace("\\", "\\\\").Replace("`", "\\`").Replace("<", "\\<").Replace("@", "\\@").Replace("#", "\\#")
+                    .Replace("&", "\\&").Replace("*", "\\*").Replace("~", "\\~").Replace("_", "\\_").Replace("|", "\\|").Replace(":", "\\:")
+                    .Replace("[", "\\[").Replace("(", "\\(").Replace("/", "\\/");
             }
             text = text.Replace("discord.gg", "discord\\.gg");
             return text;
