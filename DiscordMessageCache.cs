@@ -10,20 +10,13 @@ using System.Threading.Tasks;
 namespace DiscordBotBase
 {
     /// <summary>Helper for caching Discord messages.</summary>
-    public class DiscordMessageCache
+    public class DiscordMessageCache(DiscordBot _bot, int size)
     {
         /// <summary>How many messages to store per text channel.</summary>
-        public int MessagesPerChannel;
+        public int MessagesPerChannel = size;
 
         /// <summary>The backing Discord bot.</summary>
-        public DiscordBot Bot;
-
-        /// <summary>Construct the cache instance.</summary>
-        public DiscordMessageCache(DiscordBot _bot, int size)
-        {
-            Bot = _bot;
-            MessagesPerChannel = size;
-        }
+        public DiscordBot Bot = _bot;
 
         /// <summary>Represents a single cached message.</summary>
         public struct CachedMessage
@@ -148,7 +141,7 @@ namespace DiscordBotBase
                     try
                     {
                         SingleChannelCache cache = GetCacheForChannel(channel.Id);
-                        List<IMessage> messages = new();
+                        List<IMessage> messages = [];
                         channel.GetMessagesAsync(amountToFill).ForEachAwaitAsync(async col =>
                         {
                             messages.AddRange(col);

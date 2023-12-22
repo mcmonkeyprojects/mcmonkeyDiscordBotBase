@@ -16,17 +16,11 @@ using FreneticUtilities.FreneticToolkit;
 
 namespace DiscordBotBase
 {
-    /// <summary>Helper to monitor a Discord bot's connectivity.</summary>
-    public class ConnectionMonitor
+    /// <summary>Helper to monitor a Discord bot's connectivity. Call <see cref="StartMonitorLoop"/> to start the monitor loop.</summary>
+    public class ConnectionMonitor(DiscordBot bot)
     {
         /// <summary>The bot to monitor.</summary>
-        public DiscordBot Bot;
-
-        /// <summary>Initializes the connection monitor. Call <see cref="StartMonitorLoop"/> to start the monitor loop.</summary>
-        public ConnectionMonitor(DiscordBot bot)
-        {
-            Bot = bot;
-        }
+        public DiscordBot Bot = bot;
 
         /// <summary>Whether the bot has ever connected to Discord (since this instance of the class was started).</summary>
         public bool ConnectedOnce = false;
@@ -69,7 +63,7 @@ namespace DiscordBotBase
             {
                 Bot.Shutdown();
             });
-            DiscordBotBaseHelper.LaunchBotThread(Array.Empty<string>(),  Bot.ClientConfig);
+            DiscordBotBaseHelper.LaunchBotThread([], Bot.ClientConfig);
         }
 
         /// <summary>Lock object for monitor variables.</summary>

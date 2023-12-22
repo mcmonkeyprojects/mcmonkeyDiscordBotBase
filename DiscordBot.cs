@@ -85,8 +85,8 @@ namespace DiscordBotBase
                 }
                 string[] messageDataSplit = messageText.Split(' ');
                 StringBuilder resultBuilder = new(messageText.Length);
-                List<string> argsCleaned = new();
-                List<string> argsRaw = new();
+                List<string> argsCleaned = [];
+                List<string> argsRaw = [];
                 foreach (string originalArg in messageDataSplit)
                 {
                     if (originalArg.Contains("<@") && originalArg.Contains('>'))
@@ -114,7 +114,7 @@ namespace DiscordBotBase
                 string commandNameLowered = argsCleaned[0].ToLowerFast();
                 argsCleaned.RemoveAt(0);
                 argsRaw.RemoveAt(0);
-                CommandData commandData = new() { Message = message, CleanedArguments = argsCleaned.ToArray(), RawArguments = argsRaw.ToArray(), WasBotMention = wasMentioned, Bot = this };
+                CommandData commandData = new() { Message = message, CleanedArguments = [.. argsCleaned], RawArguments = [.. argsRaw], WasBotMention = wasMentioned, Bot = this };
                 if (ChatCommands.TryGetValue(commandNameLowered, out Action<CommandData> commandHandlerMethod))
                 {
                     commandHandlerMethod.Invoke(commandData);

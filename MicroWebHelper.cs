@@ -27,10 +27,10 @@ namespace DiscordBotBase
         public CancellationTokenSource CancelToken = new();
 
         /// <summary>Token indicates that the whole system is done.</summary>
-        public CancellationTokenSource IsEnded = new ();
+        public CancellationTokenSource IsEnded = new();
         
         /// <summary>Pre-scanned list of valid paths for the raw file root.</summary>
-        public HashSet<string> RawRootStartPaths = new();
+        public HashSet<string> RawRootStartPaths = [];
 
         /// <summary>Function to get dynamic pages as-needed.</summary>
         public Func<string, HttpListenerContext, WebResult> PageGetter;
@@ -130,7 +130,7 @@ namespace DiscordBotBase
         }
 
         /// <summary>Cache of raw root files.</summary>
-        public Dictionary<string, WebResult> RawFileCache = new();
+        public Dictionary<string, WebResult> RawFileCache = [];
 
         /// <summary>Creates and immediately starts the web helper.</summary>
         public MicroWebHelper(string bind, Func<string, HttpListenerContext, WebResult> _pageGetter, string _rawFileRoot = "wwwroot/")
