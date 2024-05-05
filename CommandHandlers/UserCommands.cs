@@ -69,7 +69,7 @@ namespace DiscordBotBase.CommandHandlers
             IUserMessage sentMessage = message.Channel.SendMessageAsync(embed: GetGenericPositiveMessageEmbed(title, description)).Result;
             if (sentMessage != null)
             {
-                sentMessage.AddReactionsAsync(new IEmote[] { new Emoji(Constants.ACCEPT_EMOJI), new Emoji(Constants.DENY_EMOJI) }).Wait();
+                sentMessage.AddReactionsAsync([new Emoji(Constants.ACCEPT_EMOJI), new Emoji(Constants.DENY_EMOJI)]).Wait();
                 ReactionsHandler.AddReactable(message, sentMessage, command);
             }
             return sentMessage;
