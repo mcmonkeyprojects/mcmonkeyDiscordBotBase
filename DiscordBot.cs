@@ -182,6 +182,10 @@ namespace DiscordBotBase
                     ConfigFile = FDSUtility.ReadFile(CONFIG_FILE);
                 }
             }
+            else
+            {
+                ConfigFile = new();
+            }
             Cache = new DiscordMessageCache(this, ConfigFile?.GetInt("discord_cache_size") ?? ClientConfig.CacheSize);
             Console.WriteLine("Loading Discord...");
             DiscordSocketConfig config = new()
