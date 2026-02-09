@@ -24,5 +24,8 @@ namespace DiscordBotBase
 
         /// <summary>The relevant bot instance.</summary>
         public DiscordBot Bot;
+
+        /// <summary>The name of the command as given by the user.</summary>
+        public string CommandName;
     }
 }

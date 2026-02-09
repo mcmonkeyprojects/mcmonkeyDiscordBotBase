@@ -114,7 +114,7 @@ namespace DiscordBotBase
                 string commandNameLowered = argsCleaned[0].ToLowerFast();
                 argsCleaned.RemoveAt(0);
                 argsRaw.RemoveAt(0);
-                CommandData commandData = new() { Message = message, CleanedArguments = [.. argsCleaned], RawArguments = [.. argsRaw], WasBotMention = wasMentioned, Bot = this };
+                CommandData commandData = new() { Message = message, CleanedArguments = [.. argsCleaned], RawArguments = [.. argsRaw], WasBotMention = wasMentioned, Bot = this, CommandName = commandNameLowered };
                 if (ChatCommands.TryGetValue(commandNameLowered, out Action<CommandData> commandHandlerMethod))
                 {
                     commandHandlerMethod.Invoke(commandData);
